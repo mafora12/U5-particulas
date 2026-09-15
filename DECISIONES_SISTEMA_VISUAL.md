@@ -1,326 +1,110 @@
 # Decisiones del sistema visual
 
-Este documento resume las decisiones conceptuales y de diseño tomadas hasta ahora
-para la experiencia web de la charla de Alma Lopez en Future Leaders Forum,
-Brasil.
-
-## Naturaleza del proyecto
-
-La pieza no es una presentacion de slides ni un PowerPoint exportado. Es una
-experiencia escenica en navegador, construida con HTML, CSS y JavaScript, que
-acompañará una charla tipo TED Talk.
-
-La estructura narrativa tiene 13 momentos. Cada frase activa un estado visual
-distinto del sistema. La frase no se ilustra literalmente: se traduce a
-comportamiento, movimiento, densidad, relacion y composicion.
-
-La idea central:
-
-**En un principio, la Universidad creó un espacio solo para grados, pero se ha 
-convertido de dos generaciones (Alma y Lorena) que han transformado el espacio en 
-un territorio de encuentros y relaciones que va más alla de ofrecer simples 
-eventos por eso el título de la presentación es: RELEVO GENERACIONAL: LA 
-VENTAJA QUE NADIE ESTÁ APROVECHANDO. La ventaja es la perspectiva fresca que ofrece
-la generación jóven y la experiencia que aporta la generación más madura. Todo 
-en función de la misma VISIÓN. 
-
-Los eventos nunca fueron el objetivo. El impacto si. 
-Nos diferenciamos de otros centros de eventos de la ciudad en 
-las capacidades de la UPB como aliado a los eventos, como respaldo desde múltiples perspectivas**
-
-
-**Un espacio se transforma cuando las personas lo habitan, lo conectan y lo
-convierten en comunidad.**
-
-## Metafora visual principal
-
-La metafora visual principal es **Forum como espacio vivo**.
-
-No se esta usando "espacio" como espacio exterior literal. Se usa como:
-
-- el espacio fisico de Forum UPB;
-- el campo donde ocurren encuentros;
-- el territorio donde aparecen oportunidades;
-- el sistema donde las relaciones transforman a las personas;
-- una representacion abstracta de comunidad, relevo generacional y futuro.
-
-La pieza puede sentirse espacial, orbital y profunda, pero debe evitar parecer
-una escena astronomica decorativa. Por eso se eliminaron elementos que se leian
-como planetas, asteroides, confeti o decoracion deportiva aislada.
-
-## Gramatica visual global
-
-### Espiral
-
-La espiral representa **Forum como espacio dinamico, convocante y en
-movimiento**. Es el elemento mas estable del sistema y debe estar presente en
-todos los momentos.
-
-La espiral no es el logo del evento. Es una traduccion generativa del espacio
-vivo de Forum y tambien dialoga con los remolinos del logo de Future Leaders
-Forum World Cup Edition 2026.
-
-### Particulas
-
-Las particulas representan:
-
-- personas;
-- jovenes;
-- oportunidades;
-- talento potencial;
-- presencias que pueden encontrarse y transformarse.
-
-No deben parecer estrellas, planetas o asteroides. Su escala debe mantenerse
-humana/sistemica, no cosmica.
-
-### Lineas y conexiones
-
-Las lineas entre particulas representan:
-
-- relaciones;
-- confianza;
-- comunidad;
-- colaboracion;
-- transformacion provocada por la convivencia.
-
-No deben aparecer siempre con la misma intensidad. Una regla central es:
-
-**Potencial sin relacion todavia no es comunidad.**
-
-Por eso en los primeros momentos hay pocas conexiones; luego se intensifican
-cuando la narrativa habla de comunidad, confianza y trabajo conjunto.
-
-### Trayectorias
-
-Las trayectorias representan caminos, busquedas, aprendizajes y formas de
-construir futuro. No son grid ni cartografia tecnica: son recorridos vivos que
-entran y salen de la espiral, permanecen por momentos y luego se transforman.
-
-El sistema evita grillas, cuadros, lattice y circulos decorativos. Si una linea
-aparece, debe tener carga semantica: encuentro, relacion, confianza, ruta,
-colaboracion o continuidad.
-
-### Paleta
-
-La paleta se ajusto para dialogar con la imagen del evento Future Leaders Forum
-World Cup Edition 2026:
-
-- cyan: energia joven, apertura, futuro;
-- rojo: accion, urgencia, impacto;
-- magenta: vitalidad contemporanea, sensibilidad joven;
-- blanco: claridad editorial;
-- negro/grises: profundidad escenica y soporte tipografico.
-
-La paleta integra el evento sin convertir la pieza en grafica deportiva. La
-relacion con futbol/World Cup queda sugerida por energia, circulacion y color,
-no por balones, canchas o iconografia literal.
-
-## Decisiones por momento
-
-### 1. Relevo generacional: la ventaja que nadie esta aprovechando
-
-Concepto visual: **potencial latente**.
-
-La ventaja son los jovenes, pero aun no estan siendo vistos ni integrados. Las
-particulas existen alrededor del campo, laten y orbitan suavemente, pero hay
-pocas conexiones. La espiral convoca, pero todavia no organiza una comunidad.
-
-Decision: no usar grid, red orbital ni volumen arquitectonico en este momento.
-Debe sentirse como energia disponible, no aprovechada.
-
-Decision de marca: los logos aparecen en todos los slides como una firma
-institucional constante y sobria. El logo de UPB Forum va a la izquierda y el
-simbolo de 90 anos va anclado al extremo derecho; no se usa el lockup UPB 90 anos completo
-para evitar redundancia con Forum. En el primer y ultimo slide la marca crece
-como apertura y cierre institucional; en los slides intermedios baja de escala,
-pero el texto `Anos` del simbolo de aniversario debe seguir siendo legible.
-
-### 2. Un gran auditorio solo para hacer grados
-
-Concepto visual: **espacio contenido / posibilidades congeladas**.
-
-Se incluyo una imagen generica de ceremonia de grados como memoria del uso
-tradicional del auditorio. La imagen no aparece como tarjeta de slide; aparece
-como fondo escenico intervenido.
-
-Las particulas estan casi quietas. Esto sugiere que el espacio tiene potencial,
-pero esta operando bajo una funcion limitada. La espiral gira suavemente como
-pregunta: que mas podria ocurrir aqui?
-
-Decision: evitar grid, circulos decorativos o lineas no justificadas. La imagen
-del auditorio y la espiral deben cargar el sentido.
-
-### 3. Los eventos no llegaron a la Universidad...
-
-Concepto visual: **apertura y encuentro**.
-
-La Universidad deja de ser un centro cerrado y se abre al mundo. Algunas
-particulas salen desde la espiral y otras llegan desde fuera. Todavia no hay
-comunidad plena; hay busqueda, cruce y disposicion al encuentro.
-
-Decision: pocas conexiones. El enfasis esta en trayectorias de entrada y salida,
-no en red consolidada.
-
-Ajuste de ritmo: las particulas deben moverse mas lento que en los momentos de
-red. La escena comienza con particulas externas viniendo desde mas lejos;
-despues Forum responde y algunas particulas salen de la espiral. Ambos flujos se
-encuentran en un punto comun y, solo despues de ese encuentro, son atraidos hacia
-el espacio de la espiral. La espiral acompana, pero no domina la lectura.
-
-### 4. Academia + Industria + Ciudad
-
-Concepto visual: **tres actores**.
-
-El sistema organiza las particulas en tres agrupaciones. Cada grupo tiene color
-y ritmo propios. La espiral funciona como campo comun, no como actor unico.
-
-Decision: tres campos diferenciados sin fusionarlos todavia.
-
-### 5. Los eventos nunca fueron el objetivo. El impacto si.
-
-Concepto visual: **consecuencia**.
-
-El momento parte de la logica del momento 4: tres actores. Pero ahora los campos
-se acercan y producen ondas de impacto. El impacto no es ocupacion del espacio;
-es huella, expansion y consecuencia visible.
-
-Decision: usar ondas y acercamiento entre campos para mostrar que la relacion
-produce efectos mas alla del evento.
-
-### 6. Un evento trae personas. Una comunidad trae transformacion.
-
-Concepto visual: **aparicion de comunidad**.
-
-Aqui las conexiones deben intensificarse. Las particulas dejan de ser presencias
-aisladas y empiezan a sostener relaciones. La espiral y la red se sincronizan
-mas, porque Forum ya no solo convoca: transforma.
-
-Decision: aumentar densidad de vinculos maduros y relaciones persistentes sin
-introducir circulos decorativos. La comunidad aparece como una red que empieza a
-sostenerse por si misma.
-
-### 7. El talento crece a la velocidad de la confianza.
-
-Concepto visual: **crecimiento estable**.
-
-La confianza se expresa como continuidad, fluidez y permanencia. Las conexiones
-duran mas, se rompen menos y el movimiento es mas armonico. La velocidad no se
-representa como aceleracion caotica sino como crecimiento sostenido.
-
-Decision: hacer visible que el talento crece cuando hay confianza. Las
-particulas se abren y expanden, pero no se dispersan porque conservan sus
-vinculos. Las lineas curvas no son rutas: son relaciones de confianza entre
-particulas concretas. A medida que la confianza crece, el color de esas
-relaciones se intensifica y la red se vuelve mas amplia e hiperconectada sin
-volverse caotica.
-
-### 8. La experiencia construye el camino...
-
-Concepto visual: **rutas emergentes**.
-
-Aqui aparecen trayectorias vivas. Algunas rutas parecen heredadas; otras emergen
-de manera exploratoria. Descubrir rutas significa desviacion inteligente, no
-desorden.
-
-Decision: eliminar grid y cartografia tecnica. Las particulas deben circular por
-caminos curvos que entran y salen de la espiral, conservando relaciones que ya
-aparecieron en momentos anteriores.
-
-### 9. Una vision. Dos generaciones.
-
-Concepto visual: **convivencia generacional**.
-
-No se trata de relevo como sustitucion. Se trata de reconocer dos energias que
-conviven. Una dinamica puede ser mas estructural/estable y otra mas exploratoria
-joven.
-
-Decision: construir tres comportamientos visuales simultaneos, diferenciados
-pero integrados. La zona joven aparece a la izquierda como nube amplia, fluida y
-rapida: particulas mas saturadas, trayectorias abiertas y relaciones existentes
-pero debiles, punteadas y efimeras. La zona de experiencia aparece a la derecha
-como una malla mas lenta y estructurada, pero no excesivamente cerrada:
-particulas sobrias, suficientemente visibles, relaciones mas ricas e intensas y
-un campo amplio y separado que permite leer la estructura. El centro de la
-espiral es una zona hibrida de mayor escala, cercana al peso visual de la
-hibridacion del momento 6: combina la energia cromatica y dinamica joven con la
-estructura relacional de la experiencia. La colaboracion plena aparece en el
-momento siguiente.
-
-### 10. El crecimiento no ocurre cuando una generacion reemplaza a otra...
-
-Concepto visual: **colaboracion entre generaciones**.
-
-Este momento intensifica el 9. Las dos dinamicas empiezan a conectarse. El
-sistema se vuelve mas rico porque integra, no porque una energia absorba a la
-otra.
-
-Decision: eliminar anillos/circulos extra para que la espiral pueda crecer con
-claridad. El crecimiento ocurre por espiral mas dinamica, color mas intenso y
-vinculos cruzados entre generaciones.
-
-### 11. Los jovenes no son el futuro...
-
-Concepto visual: **aparicion del presente joven**.
-
-Este momento responde la pregunta del momento 1. La ventaja que nadie estaba
-aprovechando eran los jovenes. Las particulas jovenes pasan al frente y se hacen
-visibles.
-
-Decision: revelar a los jovenes como respuesta narrativa. Las particulas jovenes
-se iluminan, pasan al frente y activan el sistema sin sentirse como futuro
-lejano: son presente activo.
-
-### 12. El futuro no se hereda. Se construye.
-
-Concepto visual: **construccion colaborativa**.
-
-El futuro aparece como una estructura que se arma en tiempo real por la
-convivencia de generaciones, relaciones y rutas. No es herencia pasiva ni
-destino lejano.
-
-Decision: eliminar grid, lattice y circulos. El futuro se representa con rutas
-que permanecen parcialmente, otras que aparecen y desaparecen, particulas que
-trabajan sobre caminos y vinculos que sostienen la construccion.
-
-### 13. Memorias / anais y redes
-
-Concepto visual: **sintesis y continuidad**.
-
-La energia no se apaga. La espiral llega a su maximo esplendor, las particulas
-quedan hiperconectadas y las trayectorias vivas permanecen como memoria de todo
-el recorrido. La invitacion es seguir conectado con Forum despues de la charla.
-
-Decision: eliminar cuadros, circulos y archivo visual sin carga semantica. El
-cierre sintetiza espiral, comunidad, vinculos y rutas. En escritorio aparecen
-codigos QR funcionales; en movil se sustituyen por hipervinculos a memorias
-(`Anais` en portugues) y redes sociales, porque escanear un QR desde el mismo
-celular no tiene sentido operativo.
-
-## Decisiones de interfaz y operacion
-
-La experiencia funciona con teclado:
-
-- espacio o flecha derecha: avanzar;
-- flecha izquierda: volver;
-- F: pantalla completa;
-- H: mostrar/ocultar ayudas;
-- R: reiniciar.
-
-Tambien incluye selector ES/PT en la ayuda. La experiencia abre en portugues por
-defecto, porque la charla sera en Brasil. Los textos estan separados por idioma
-en `moments.js`.
-
-Los subtitulos estan vacios por ahora (`subtitle: ""`) para que Alma pueda
-personalizarlos despues si lo desea.
-
-## Archivos importantes
-
-- `index.html`: estructura principal.
-- `styles.css`: layout, tipografia, capas, composicion QR/enlaces y responsive.
-- `main.js`: control de momentos, teclado, idioma, assets configurables.
-- `moments.js`: textos ES/PT, estados y parametros visuales.
-- `visualSystem.js`: motor generativo y gramatica visual.
-- `config.js`: configuracion global, QR/enlaces, imagenes por slide, paleta,
-  idioma por defecto.
-- `assets/`: imagenes, logos y QR.
-
+Presentación generativa para la charla **“Relevo generacional: la ventaja que nadie está
+aprovechando”** (Alma López, Centro de Eventos Fórum UPB · Future Leaders Forum 2026).
+
+La composición de las 13 diapositivas (fondos, paneles de vidrio, tipografía Rajdhani,
+navegación, selector de idioma y ayuda) sigue el diseño de Figma `juan_franco_u5`.
+Encima de esa composición vive un sistema de partículas que interpreta el guion.
+
+## Concepto
+
+Según los datos de partida, Fórum nació como un espacio solo para grados y se convirtió en
+un **territorio de encuentros y relaciones** gracias a la *convivencia de varias
+generaciones*. Por eso el sistema no representa “eventos”: representa **personas y las
+relaciones que las transforman**.
+
+> Las personas son las mismas durante toda la charla. Lo que cambia es cómo se relacionan.
+
+Las partículas no se reinician entre diapositivas: se reorganizan. El paso de una
+estructura a otra es parte del discurso.
+
+Cada vez que cambia la diapositiva, las partículas **nacen dentro del panel de vidrio**
+(o del texto, en las diapositivas sin panel) y salen desde ahí hacia la estructura de la
+nueva escena: la frase es la que origina el nuevo orden de las relaciones.
+
+## Gramática visual
+
+| Elemento | Significado | Cómo se comporta |
+| --- | --- | --- |
+| Partícula | Una persona | Posición, tamaño, color y brillo propios |
+| Generación “experiencia” | Quienes construyeron Fórum | Más grande, más lenta; violeta / azul |
+| Generación “joven” | Estudiantes y nuevos talentos | Más pequeña, más rápida; cian / rosa |
+| Vínculo (línea) | Relación / confianza | Crece si dos personas permanecen cerca y se debilita si se alejan |
+| Brillo | Ser visto, ser valorado | Aparece cuando algo alcanza a la persona |
+| Onda | Impacto | Se propaga por el espacio y enciende a quien toca |
+| Rastro | Camino recorrido | Queda dibujado después del paso |
+
+La paleta es la de Figma (azul `#2457ff`, cian `#65e6e2`, violeta `#6655ee`, rosa `#ff4fa3`,
+blanco `#f4f3ef`), que dialoga con el remolino rosa/rojo/azul del logo de Future Leaders
+Forum, como pide la invitación del cliente.
+
+## Relaciones y comportamiento por diapositiva
+
+1. **Relevo generacional** — La experiencia forma una red alrededor del edificio. Los jóvenes
+   están dispersos, apagados y sin vínculos. Cada tanto la experiencia envía un pulso de luz
+   (el relevo) a un joven: brilla y vuelve a apagarse. *La ventaja existe, pero nadie la
+   aprovecha.*
+2. **¿Un auditorio solo para grados?** — Todas las personas ocupan filas fijas, sin distinguir
+   generación: una sola función. Grupos se lanzan hacia arriba (los birretes), se encienden
+   con un color distinto en cada salto y chocan con un techo invisible; al volver a su silla
+   regresan al blanco. *Potencial contenido: la energía aparece, pero no puede salir.*
+3. **La Universidad decidió encontrarse con el mundo** — La esfera central del fondo es la
+   Universidad. Sus partículas salen hacia el borde; las del mundo llegan desde afuera. Solo
+   hay vínculos entre ambos grupos y solo en la frontera. *El encuentro.*
+4. **Academia + Industria + Ciudad** — Tres grupos con color y ritmo propios, cohesionados por
+   dentro. Pocas partículas “puente” unen los grupos: son los “+”. *Relación sin fusión.*
+5. **El impacto sí** — Los tres grupos convergen en un punto (el evento). De ese punto sale una
+   onda que atraviesa todo el espacio, enciende a las personas y deja vínculos nuevos a su paso.
+   *El evento es un punto; el impacto llega lejos.*
+6. **Una comunidad trae transformación** — Primero llegan personas sueltas y blancas (el evento).
+   Luego se tejen vínculos; cuanto más conectada está una persona, más cambia hacia el rosa y
+   más crece. *La comunidad transforma.*
+7. **El talento crece a la velocidad de la confianza** — Todas giran juntas sin cambiar su
+   posición relativa, así la cercanía se sostiene. Los vínculos se fortalecen despacio y el
+   tamaño/brillo (talento) de cada partícula depende de la confianza acumulada.
+8. **La experiencia construye el camino; las nuevas generaciones descubren rutas** — La
+   experiencia avanza despacio y traza el camino principal. Los jóvenes lo recorren más rápido
+   y en algún punto se desvían, dejando rastros propios. Aquí las partículas nacen en la franja
+   entre la frase y la navegación y pasan **por encima** del vidrio: el camino atraviesa el
+   espacio del discurso en lugar de rodearlo.
+9. **Una visión. Dos generaciones.** — Un único punto de luz: la visión. Cada generación orbita a
+   su ritmo (amplia y lenta / cercana, rápida y en sentido contrario). Solo hay vínculos dentro
+   de cada generación. *Dos ritmos, un centro.*
+10. **Ocurre cuando trabajan juntas** — Cada persona con experiencia forma pareja con una joven;
+    giran juntas sin ocupar el lugar de la otra. De las parejas nacen partículas nuevas.
+    *El crecimiento sale de la colaboración, no del reemplazo.*
+11. **Los jóvenes son el presente** — Los jóvenes aparecen en un punto lejano, casi invisibles
+    (el “futuro”), avanzan hacia el frente, crecen, se encienden y se conectan. La experiencia
+    se retira al fondo. *No son futuro lejano: están aquí.*
+12. **El futuro no se hereda. Se construye.** — No aparece una estructura hecha: las dos
+    generaciones, por turnos, llevan cada pieza a su lugar y un arco se levanta desde la base
+    hasta la clave. Las vigas solo existen cuando sus dos extremos fueron colocados.
+13. **Cierre** — Todas las personas del recorrido forman una sola red en espiral de tres brazos
+    (rosa, azul, cian) que sigue girando alrededor de los códigos. *La conversación continúa.*
+
+## Regla de diseño aplicada
+
+Ningún movimiento es decorativo: cada escena define **qué relación existe** (quién puede
+vincularse con quién), **qué la hace crecer o romperse** (distancia, tiempo, onda, pareja) y
+**qué cambio visible produce** (color, tamaño, brillo, rastro, estructura).
+
+## Composición (Figma)
+
+- En portugués cada bloque de texto se ajusta automáticamente para ocupar como máximo
+  el mismo espacio que ocupa en español (el idioma del diseño), sin montarse sobre la navegación.
+- Lienzo de 1920 × 1080 escalado a la pantalla, sin deformarse.
+- Paneles de vidrio con desenfoque de fondo; las partículas que pasan detrás se desenfocan.
+- Al cambiar de diapositiva los paneles, la marca y la navegación se desplazan a su nueva
+  posición (equivalente al *Smart Animate* de Figma) y los textos se funden.
+- Componente 1: el engranaje despliega el selector **Esp / Por** (0,3 s).
+- Componente 2: el botón **?** despliega los atajos de teclado (0,3 s).
+
+## Archivos
+
+- `index.html` — estructura.
+- `styles.css` — estilos y animaciones de los componentes.
+- `slides.js` — textos (es/pt), fondos, paneles y posiciones de cada diapositiva.
+- `particles.js` — motor de partículas y una escena por diapositiva.
+- `main.js` — navegación, idioma, transiciones y escalado.
+- `config.js` — idioma inicial, enlace del QR y duración de transición.

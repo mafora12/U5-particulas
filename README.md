@@ -1,16 +1,29 @@
-# Relevo generacional | Experiencia TED Talk
+# Relevo generacional | Presentación generativa
 
-## Abrir local
+Presentación web para la charla de Fórum UPB en Future Leaders Forum 2026, construida con
+HTML, CSS y JavaScript a partir del diseño de Figma y un sistema de partículas.
 
-La presentacion puede abrirse con doble clic en `index.html`.
+## Abrir
+
+Doble clic en `index.html`, o con un servidor local:
+
+```bash
+py -m http.server 8123
+```
+
+y abrir `http://localhost:8123`. Se puede ir directo a una diapositiva con `#número`
+(por ejemplo `http://localhost:8123/#7`).
 
 ## Controles
 
-- `Espacio` o `Flecha derecha`: avanzar.
-- `Flecha izquierda`: volver.
-- `F`: pantalla completa.
-- `H`: ocultar/mostrar ayuda.
-- `R`: reiniciar.
-- Selector `ES` / `PT` en la ayuda: cambiar idioma.
+- `Espacio`, `→` o `Av Pág`: avanzar.
+- `←` o `Re Pág`: volver.
+- `F` o botón de esquinas: pantalla completa (funciona en Chrome, Edge y Firefox; si el
+  navegador la bloquea aparece un aviso y se puede usar `F11`).
+- `H`: mostrar / ocultar ayuda.
+- `R`: volver al inicio.
+- Engranaje → `Esp` / `Por`: cambiar idioma.
+- En pantallas táctiles: deslizar a izquierda o derecha.
 
-Para editar textos, QR y parametros visuales, revisa `GUIA_CAMBIOS_RAPIDOS.md`.
+Para cambiar textos o enlaces revisa `GUIA_CAMBIOS_RAPIDOS.md`.
+El concepto y la gramática visual están en `DECISIONES_SISTEMA_VISUAL.md`.

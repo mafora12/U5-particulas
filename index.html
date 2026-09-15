@@ -4,88 +4,75 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Fórum UPB | Relevo generacional</title>
-    <link rel="stylesheet" href="./styles.css?v=portable-4" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="./styles.css" />
   </head>
   <body>
-    <main class="stage-shell" aria-label="Experiencia TED Talk Fórum UPB">
-      <section class="stage" id="stage">
-        <canvas id="visual-canvas" aria-hidden="true"></canvas>
+    <main class="viewport" aria-label="Presentación Relevo generacional · Fórum UPB">
+      <div class="stage" id="stage">
+        <div class="bg-layer" id="bg-layer" aria-hidden="true"></div>
+        <canvas class="particles" id="particles" aria-hidden="true"></canvas>
 
-        <div class="grain" aria-hidden="true"></div>
-        <div class="vignette" aria-hidden="true"></div>
-
-        <div class="brand-lockup" aria-label="UPB Forum y 90 años">
-          <img class="brand-logo brand-logo-forum" src="./assets/brand-forum.png" alt="UPB Fórum Centro de Eventos" />
-          <span class="brand-divider" aria-hidden="true"></span>
-          <img class="brand-logo brand-logo-90" src="./assets/brand-90.png" alt="90 años" />
+        <div class="panels" id="panels" aria-hidden="true">
+          <div class="glass"></div>
+          <div class="glass"></div>
+          <div class="glass"></div>
         </div>
 
-        <section class="copy-layer" aria-live="polite">
-          <p class="eyebrow" id="moment-kicker">Future Leaders Forum · Fórum UPB</p>
-          <h1 id="moment-title"></h1>
-          <p class="subtitle" id="moment-subtitle"></p>
-        </section>
+        <section class="copy" id="copy" aria-live="polite"></section>
 
-        <figure class="moment-asset" id="moment-asset" aria-hidden="true">
-          <img id="moment-image" alt="" />
-        </figure>
+        <img class="brand brand-forum" id="brand-forum" src="./assets/brand-forum.png" alt="UPB Fórum Centro de Eventos" />
+        <img class="brand brand-ninety" id="brand-ninety" src="./assets/brand-90.png" alt="UPB 90 años" />
 
-        <aside class="qr-layer" id="qr-layer" aria-label="Enlaces de cierre">
-          <a class="qr-block" id="qr-memory-link" href="#" target="_blank" rel="noopener noreferrer">
-            <div class="qr-code" id="qr-memory" aria-hidden="true"></div>
-            <span id="qr-memory-label">Memorias</span>
-          </a>
-          <a class="qr-block" id="qr-social-link" href="#" target="_blank" rel="noopener noreferrer">
-            <div class="qr-code" id="qr-social" aria-hidden="true"></div>
-            <span id="qr-social-label">@centrodeeventosupb</span>
-          </a>
-        </aside>
-
-        <nav class="operator-ui" id="operator-ui" aria-label="Controles de operacion">
-          <button class="icon-button" id="prev-button" type="button" aria-label="Momento anterior" title="Anterior">
-            <span aria-hidden="true">‹</span>
-          </button>
-          <div class="counter" aria-label="Momento actual">
-            <span id="moment-number">01</span>
-            <span>/</span>
-            <span id="moment-total">13</span>
-          </div>
-          <button class="icon-button" id="next-button" type="button" aria-label="Siguiente momento" title="Siguiente">
-            <span aria-hidden="true">›</span>
-          </button>
-          <button class="icon-button" id="fullscreen-button" type="button" aria-label="Pantalla completa" title="Pantalla completa">
-            <span aria-hidden="true">⛶</span>
-          </button>
-          <button class="icon-button" id="help-button" type="button" aria-label="Mostrar ayuda" title="Ayuda">
-            <span aria-hidden="true">?</span>
-          </button>
-        </nav>
-
-        <div class="help-panel" id="help-panel">
-          <span>Espacio / → avanzar</span>
-          <span>← volver</span>
-          <span>F fullscreen</span>
-          <span>H ayuda</span>
-          <span>R reiniciar</span>
-          <div class="mobile-counter" aria-label="Momento actual en móvil">
-            <span id="mobile-moment-number">01</span>
-            <span>/</span>
-            <span id="mobile-moment-total">13</span>
-          </div>
-          <button class="mobile-action-button" id="reset-button" type="button" aria-label="Reiniciar experiencia">Reiniciar</button>
-          <button class="mobile-action-button" id="end-button" type="button" aria-label="Ir al cierre">Final</button>
-          <button class="mobile-action-button" id="mobile-fullscreen-button" type="button" aria-label="Pantalla completa">Fullscreen</button>
-          <div class="language-switch" aria-label="Idioma">
-            <button type="button" data-language="es">ES</button>
-            <button type="button" data-language="pt">PT</button>
+        <div class="nav-arrows" id="nav-arrows">
+          <div class="nav-arrows__row">
+            <button class="arrow arrow--prev" id="prev" type="button" aria-label="Diapositiva anterior">
+              <img src="./assets/icons/arrow-left.svg" alt="" />
+            </button>
+            <span class="counter" id="counter">1/13</span>
+            <button class="arrow arrow--next" id="next" type="button" aria-label="Diapositiva siguiente">
+              <img src="./assets/icons/arrow-right.svg" alt="" />
+            </button>
           </div>
         </div>
-      </section>
+
+        <div class="lang-toggle" id="lang-toggle">
+          <button class="lang-toggle__gear" id="gear" type="button" aria-label="Idioma" aria-expanded="false">
+            <img class="gear-closed" src="./assets/icons/gear-closed.svg" alt="" />
+            <img class="gear-open" src="./assets/icons/gear-open-vector.svg" alt="" />
+          </button>
+          <div class="lang-toggle__pill">
+            <span class="lang-toggle__highlight"></span>
+            <button type="button" data-lang="es">Esp</button>
+            <button type="button" data-lang="pt">Por</button>
+          </div>
+        </div>
+
+        <button class="fullscreen" id="fullscreen" type="button" aria-label="Pantalla completa">
+          <img src="./assets/icons/fullscreen.svg" alt="" />
+        </button>
+
+        <p class="notice" id="notice" role="status"></p>
+
+        <div class="help" id="help">
+          <button class="help__button" id="help-button" type="button" aria-label="Ayuda" aria-expanded="false">
+            <img src="./assets/icons/help-open-vector.svg" alt="" />
+          </button>
+          <div class="help__pill">
+            <span class="help__chip help__chip--wide"></span>
+            <span class="help__chip"></span>
+            <span class="help__chip"></span>
+            <span class="help__chip"></span>
+          </div>
+        </div>
+      </div>
     </main>
 
-    <script src="./config.js?v=portable-4"></script>
-    <script src="./moments.js?v=portable-4"></script>
-    <script src="./visualSystem.js?v=portable-4"></script>
-    <script src="./main.js?v=portable-4"></script>
+    <script src="./config.js"></script>
+    <script src="./slides.js"></script>
+    <script src="./particles.js"></script>
+    <script src="./main.js"></script>
   </body>
 </html>

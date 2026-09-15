@@ -1,406 +1,387 @@
-const canvas = document.querySelector("#visual-canvas");
-const stage = document.querySelector("#stage");
-const titleEl = document.querySelector("#moment-title");
-const kickerEl = document.querySelector("#moment-kicker");
-const subtitleEl = document.querySelector("#moment-subtitle");
-const numberEl = document.querySelector("#moment-number");
-const totalEl = document.querySelector("#moment-total");
-const mobileNumberEl = document.querySelector("#mobile-moment-number");
-const mobileTotalEl = document.querySelector("#mobile-moment-total");
-const copyLayer = document.querySelector(".copy-layer");
-const helpPanel = document.querySelector("#help-panel");
-const operatorUi = document.querySelector("#operator-ui");
-const qrLayer = document.querySelector("#qr-layer");
-const qrMemory = document.querySelector("#qr-memory");
-const qrSocial = document.querySelector("#qr-social");
-const qrMemoryLink = document.querySelector("#qr-memory-link");
-const qrSocialLink = document.querySelector("#qr-social-link");
-const qrMemoryLabel = document.querySelector("#qr-memory-label");
-const qrSocialLabel = document.querySelector("#qr-social-label");
-const assetFrame = document.querySelector("#moment-asset");
-const assetImage = document.querySelector("#moment-image");
-const languageButtons = [...document.querySelectorAll("[data-language]")];
-const helpButton = document.querySelector("#help-button");
-const resetButton = document.querySelector("#reset-button");
-const endButton = document.querySelector("#end-button");
-const mobileFullscreenButton = document.querySelector("#mobile-fullscreen-button");
+const DESIGN_W = 1920;
+const DESIGN_H = 1080;
+const ICONS = "./assets/icons/";
 
-let activeIndex = 0;
-const compactViewport = window.matchMedia("(max-aspect-ratio: 1 / 1)");
-let showHelp = false;
-let activeLanguage = localStorage.getItem("forum-language") || CONFIG.defaultLanguage;
-let transitionTimer = 0;
-let assetClearTimer = 0;
+const $ = (sel) => document.querySelector(sel);
+const stage = $("#stage");
+const bgLayer = $("#bg-layer");
+const copyRoot = $("#copy");
+const glassEls = [...document.querySelectorAll(".glass")];
+const brandForum = $("#brand-forum");
+const brandNinety = $("#brand-ninety");
+const navArrows = $("#nav-arrows");
+const prevBtn = $("#prev");
+const nextBtn = $("#next");
+const counter = $("#counter");
+const langToggle = $("#lang-toggle");
+const gearBtn = $("#gear");
+const fullscreenBtn = $("#fullscreen");
+const help = $("#help");
+const helpBtn = $("#help-button");
+const notice = $("#notice");
 
-const visualSystem = new VisualSystem(canvas);
+const particles = new ParticleSystem($("#particles"));
 
-const TITLE_HIGHLIGHTS = {
-  "relevo-generacional": {
-    es: [{ text: "RELEVO GENERACIONAL", tone: "cyan" }],
-    pt: [{ text: "RELEVO GERACIONAL", tone: "cyan" }],
-  },
-  "universidad-mundo": {
-    es: [{ text: "La Universidad decidió encontrarse con el mundo.", tone: "cyan" }],
-    pt: [{ text: "A Universidade decidiu se encontrar com o mundo.", tone: "cyan" }],
-  },
-  impacto: {
-    es: [{ text: "El impacto sí.", tone: "red" }],
-    pt: [{ text: "O impacto, sim.", tone: "red" }],
-  },
-  comunidad: {
-    es: [
-      { text: "comunidad", tone: "cyan" },
-      { text: "transformación", tone: "magenta" },
-    ],
-    pt: [
-      { text: "comunidade", tone: "cyan" },
-      { text: "transformação", tone: "magenta" },
-    ],
-  },
-  confianza: {
-    es: [{ text: "confianza", tone: "magenta" }],
-    pt: [{ text: "confiança", tone: "magenta" }],
-  },
-  "nuevas-rutas": {
-    es: [
-      { text: "experiencia", tone: "cyan" },
-      { text: "camino", tone: "magenta" },
-      { text: "nuevas rutas", tone: "red" },
-    ],
-    pt: [
-      { text: "experiência", tone: "cyan" },
-      { text: "caminho", tone: "magenta" },
-      { text: "novas rotas", tone: "red" },
-    ],
-  },
-  "vision-generaciones": {
-    es: [{ text: "Dos generaciones", tone: "cyan" }],
-    pt: [{ text: "Duas gerações", tone: "cyan" }],
-  },
-  "trabajan-juntas": {
-    es: [
-      { text: "crecimiento", tone: "cyan" },
-      { text: "trabajan juntas", tone: "magenta" },
-    ],
-    pt: [
-      { text: "crescimento", tone: "cyan" },
-      { text: "trabalham juntas", tone: "magenta" },
-    ],
-  },
-  "presente-joven": {
-    es: [{ text: "presente", tone: "red" }],
-    pt: [{ text: "presente", tone: "red" }],
-  },
-  "futuro-construido": {
-    es: [
-      { text: "futuro", tone: "cyan" },
-      { text: "Se construye", tone: "red" },
-    ],
-    pt: [
-      { text: "futuro", tone: "cyan" },
-      { text: "constrói", tone: "red" },
-    ],
-  },
+const storedLang = (() => {
+  try {
+    return localStorage.getItem("forum-lang");
+  } catch {
+    return null;
+  }
+})();
+
+let lang = storedLang === "es" || storedLang === "pt" ? storedLang : CONFIG.defaultLanguage;
+let index = 0;
+let currentBgKey = "";
+
+// ---------- Escala del lienzo 1920 × 1080 ----------
+
+function fit() {
+  const scale = Math.min(window.innerWidth / DESIGN_W, window.innerHeight / DESIGN_H);
+  stage.style.setProperty("--scale", scale);
+  particles.resize(scale);
+}
+
+// ---------- Construcción de cada diapositiva ----------
+
+const px = (v) => `${v}px`;
+const move = (el, x, y) => {
+  el.style.transform = `translate(${x}px, ${y}px)`;
 };
 
-function pad(value) {
-  return String(value).padStart(2, "0");
+function setBackground(slide) {
+  const key = slide.bg.image || slide.bg.css;
+  if (key === currentBgKey) return;
+  currentBgKey = key;
+  const layer = document.createElement("div");
+  if (slide.bg.image) layer.style.backgroundImage = `url("${slide.bg.image}")`;
+  else layer.style.background = slide.bg.css;
+  bgLayer.append(layer);
+  requestAnimationFrame(() => requestAnimationFrame(() => layer.classList.add("is-visible")));
+  const old = [...bgLayer.children].filter((el) => el !== layer);
+  window.setTimeout(() => old.forEach((el) => el.remove()), CONFIG.transition * 1000 + 100);
 }
 
-function makeQrPattern(element, value, imageUrl = "") {
-  if (imageUrl) {
-    element.style.backgroundColor = "#f6f1e8";
-    element.style.backgroundImage = `url("${imageUrl}")`;
-    element.style.backgroundPosition = "center";
-    element.style.backgroundSize = "cover";
-    element.style.backgroundRepeat = "no-repeat";
-    element.title = value;
-    return;
-  }
-
-  const size = 25;
-  let hash = 0;
-  for (let i = 0; i < value.length; i += 1) {
-    hash = (hash * 31 + value.charCodeAt(i)) >>> 0;
-  }
-  const images = [];
-  const positions = [];
-  for (let y = 0; y < size; y += 1) {
-    for (let x = 0; x < size; x += 1) {
-      const inFinder =
-        (x < 7 && y < 7) ||
-        (x >= size - 7 && y < 7) ||
-        (x < 7 && y >= size - 7);
-      const finderBorder =
-        inFinder &&
-        (x === 0 ||
-          y === 0 ||
-          x === 6 ||
-          y === 6 ||
-          x === size - 7 ||
-          y === size - 7 ||
-          x === size - 1 ||
-          y === size - 1);
-      const finderCore =
-        inFinder &&
-        ((x >= 2 && x <= 4 && y >= 2 && y <= 4) ||
-          (x >= size - 5 && x <= size - 3 && y >= 2 && y <= 4) ||
-          (x >= 2 && x <= 4 && y >= size - 5 && y <= size - 3));
-      const bit = ((hash >> ((x + y * 3) % 23)) ^ (x * 17 + y * 29 + hash)) & 1;
-      const on = finderBorder || finderCore || (!inFinder && bit && (x + y) % 3 !== 0);
-      if (on) {
-        images.push("linear-gradient(#070808, #070808)");
-        positions.push(`${x * 4}% ${y * 4}%`);
-      }
+function setPanels(slide) {
+  glassEls.forEach((el, k) => {
+    const p = slide.panels[k];
+    if (!p) {
+      el.classList.remove("is-visible");
+      return;
     }
-  }
-  element.style.backgroundColor = "#f6f1e8";
-  element.style.backgroundImage = images.join(",");
-  element.style.backgroundPosition = positions.join(",");
-  element.style.backgroundSize = "4% 4%";
-  element.style.backgroundRepeat = "no-repeat";
-  element.title = value;
-}
-
-function copyFor(moment) {
-  return moment.copy?.[activeLanguage] || moment.copy?.[CONFIG.defaultLanguage] || moment.copy?.es || moment;
-}
-
-function highlightsFor(moment) {
-  return TITLE_HIGHLIGHTS[moment.id]?.[activeLanguage] || TITLE_HIGHLIGHTS[moment.id]?.[CONFIG.defaultLanguage] || [];
-}
-
-function appendHighlightedText(parent, text, highlights) {
-  if (!highlights.length) {
-    parent.append(document.createTextNode(text));
-    return;
-  }
-
-  const normalizedText = text.toLocaleLowerCase(activeLanguage);
-  const ordered = [...highlights].sort((a, b) => b.text.length - a.text.length);
-  let cursor = 0;
-
-  while (cursor < text.length) {
-    let next = null;
-    for (const highlight of ordered) {
-      const index = normalizedText.indexOf(highlight.text.toLocaleLowerCase(activeLanguage), cursor);
-      if (index === -1) continue;
-      if (!next || index < next.index || (index === next.index && highlight.text.length > next.text.length)) {
-        next = { ...highlight, index };
-      }
-    }
-
-    if (!next) {
-      parent.append(document.createTextNode(text.slice(cursor)));
-      break;
-    }
-
-    if (next.index > cursor) {
-      parent.append(document.createTextNode(text.slice(cursor, next.index)));
-    }
-
-    const span = document.createElement("span");
-    span.className = `title-highlight title-highlight--${next.tone}`;
-    span.textContent = text.slice(next.index, next.index + next.text.length);
-    parent.append(span);
-    cursor = next.index + next.text.length;
-  }
-}
-
-function renderTitle(moment, copy) {
-  titleEl.replaceChildren();
-  const parent =
-    moment.state === "qr"
-      ? Object.assign(document.createElement("a"), {
-          href: CONFIG.qr.socialUrl,
-          target: "_blank",
-          rel: "noopener noreferrer",
-        })
-      : titleEl;
-
-  appendHighlightedText(parent, copy.title, highlightsFor(moment));
-
-  if (moment.state === "qr") {
-    titleEl.append(parent);
-  }
-}
-
-function updateLanguageUi() {
-  document.documentElement.lang = activeLanguage;
-  for (const button of languageButtons) {
-    const isActive = button.dataset.language === activeLanguage;
-    button.classList.toggle("is-active", isActive);
-    button.setAttribute("aria-pressed", String(isActive));
-    button.textContent = languageLabels[button.dataset.language] || button.dataset.language.toUpperCase();
-  }
-  const qrLabels = CONFIG.qr.labels?.[activeLanguage] || CONFIG.qr.labels?.[CONFIG.defaultLanguage] || {};
-  qrMemoryLabel.textContent = qrLabels.memory || "Memorias";
-  qrSocialLabel.textContent = qrLabels.social || "@centrodeeventosupb";
-}
-
-function assetFor(moment) {
-  const configuredAsset = CONFIG.assets.byMoment?.[moment.id];
-  return configuredAsset === false ? null : configuredAsset || moment.asset;
-}
-
-function setAsset(moment) {
-  window.clearTimeout(assetClearTimer);
-  const asset = assetFor(moment);
-  if (asset?.type === "image" && asset.src) {
-    const isBackground = asset.placement === "background";
-    const changeImage = assetImage.getAttribute("src") !== asset.src;
-    if (changeImage) {
-      assetFrame.classList.remove("is-visible");
-      assetClearTimer = window.setTimeout(() => {
-        assetFrame.classList.toggle("is-background", isBackground);
-        stage.classList.toggle("has-background-asset", isBackground);
-        assetImage.src = asset.src;
-        assetImage.alt = asset.alt || "";
-        assetFrame.classList.add("is-visible");
-      }, 140);
-    } else {
-      assetFrame.classList.toggle("is-background", isBackground);
-      stage.classList.toggle("has-background-asset", isBackground);
-      assetFrame.classList.add("is-visible");
-    }
-    return;
-  }
-
-  assetFrame.classList.remove("is-visible");
-  assetClearTimer = window.setTimeout(() => {
-    if (!assetFrame.classList.contains("is-visible")) {
-      assetFrame.classList.remove("is-background");
-      stage.classList.remove("has-background-asset");
-      assetImage.removeAttribute("src");
-      assetImage.alt = "";
-    }
-  }, 430);
-}
-
-function setMoment(index) {
-  activeIndex = Math.max(0, Math.min(moments.length - 1, index));
-  const moment = moments[activeIndex];
-  const copy = copyFor(moment);
-  const asset = assetFor(moment);
-  const hasImageAsset = asset?.type === "image" && asset.src;
-  const hasBackgroundAsset = hasImageAsset && asset.placement === "background";
-  window.clearTimeout(transitionTimer);
-  qrLayer.classList.toggle("is-visible", moment.state === "qr");
-  copyLayer.classList.add("is-changing");
-  transitionTimer = window.setTimeout(() => {
-    stage.classList.toggle("is-title-moment", activeIndex === 0);
-    stage.classList.toggle("is-closing-moment", activeIndex === moments.length - 1);
-    stage.dataset.moment = moment.id;
-    copyLayer.classList.toggle("is-qr", moment.state === "qr");
-    copyLayer.classList.toggle("has-asset", hasImageAsset && !hasBackgroundAsset);
-    copyLayer.classList.toggle("has-background-asset", hasBackgroundAsset);
-    copyLayer.classList.toggle("is-long", copy.title.length > 74);
-    copyLayer.classList.toggle("is-very-long", copy.title.length > 104);
-    kickerEl.textContent = copy.kicker || CONFIG.brandLine;
-    renderTitle(moment, copy);
-    subtitleEl.textContent = copy.subtitle || "";
-    numberEl.textContent = pad(activeIndex + 1);
-    mobileNumberEl.textContent = pad(activeIndex + 1);
-    requestAnimationFrame(() => {
-      copyLayer.classList.remove("is-changing");
-    });
-  }, 140);
-  setAsset(moment);
-  visualSystem.setMoment(moment);
-}
-
-function nextMoment() {
-  setMoment(activeIndex + 1);
-}
-
-function previousMoment() {
-  setMoment(activeIndex - 1);
-}
-
-async function toggleFullscreen() {
-  if (!document.fullscreenElement) {
-    await stage.requestFullscreen();
-  } else {
-    await document.exitFullscreen();
-  }
-}
-
-function toggleHelp() {
-  showHelp = !showHelp;
-  updateHelpUi();
-}
-
-function updateHelpUi() {
-  helpPanel.classList.toggle("is-hidden", !showHelp);
-  helpButton.setAttribute("aria-pressed", String(showHelp));
-  helpButton.setAttribute("aria-label", showHelp ? "Ocultar ayuda" : "Mostrar ayuda");
-}
-
-function tick() {
-  visualSystem.render();
-  requestAnimationFrame(tick);
-}
-
-document.querySelector("#next-button").addEventListener("click", nextMoment);
-document.querySelector("#prev-button").addEventListener("click", previousMoment);
-document.querySelector("#fullscreen-button").addEventListener("click", toggleFullscreen);
-helpButton.addEventListener("click", toggleHelp);
-resetButton.addEventListener("click", () => setMoment(0));
-endButton.addEventListener("click", () => setMoment(moments.length - 1));
-mobileFullscreenButton.addEventListener("click", toggleFullscreen);
-
-for (const button of languageButtons) {
-  button.addEventListener("click", () => {
-    activeLanguage = button.dataset.language;
-    localStorage.setItem("forum-language", activeLanguage);
-    updateLanguageUi();
-    setMoment(activeIndex);
+    el.style.left = px(p.x);
+    el.style.top = px(p.y);
+    el.style.width = px(p.w);
+    el.style.height = px(p.h);
+    el.style.borderRadius = p.r.map(px).join(" ");
+    el.style.setProperty("--blur", px(p.blur * 0.75));
+    el.style.background = p.fill || "";
+    el.classList.add("is-visible");
   });
 }
 
+function buildText(block, language = lang) {
+  const el = document.createElement("p");
+  el.className = "t";
+  el.style.top = px(block.y);
+  if (block.size) {
+    el.style.fontSize = px(block.size);
+    el.dataset.size = block.size;
+  }
+  if (block.color) el.style.color = block.color;
+  if (block.weight) el.style.fontWeight = block.weight;
+  if (block.nowrap) el.classList.add("t--nowrap");
+
+  if (block.right !== undefined) {
+    el.classList.add("t--right");
+    el.style.left = px(block.right - block.w);
+    el.style.width = px(block.w);
+  } else if (block.cx !== undefined) {
+    el.classList.add("t--center");
+    el.style.left = px(block.cx);
+    if (block.w) el.style.width = px(block.w);
+  } else {
+    el.style.left = px(block.x);
+    if (block.w) el.style.width = px(block.w);
+  }
+
+  const target = block.link === "social"
+    ? Object.assign(document.createElement("a"), { href: CONFIG.qr.socialUrl, target: "_blank", rel: "noopener noreferrer" })
+    : el;
+
+  for (const part of block.parts) {
+    const span = document.createElement("span");
+    span.textContent = part[language] ?? part.es;
+    if (part.color) span.style.color = part.color;
+    if (part.size) {
+      span.style.fontSize = px(part.size);
+      span.dataset.size = part.size;
+    }
+    target.append(span);
+    if (part.br) target.append(document.createElement("br"));
+  }
+  if (target !== el) el.append(target);
+  return el;
+}
+
+function buildCopy(slide) {
+  const set = document.createElement("div");
+  set.className = "copy-set";
+  for (const block of slide.texts) set.append(buildText(block));
+  for (const img of slide.images || []) {
+    const link = Object.assign(document.createElement("a"), { href: CONFIG.qr.socialUrl, target: "_blank", rel: "noopener noreferrer" });
+    const el = Object.assign(document.createElement("img"), { className: "copy-img", src: CONFIG.qr.socialImage, alt: "Código QR @centrodeeventosupb" });
+    Object.assign(el.style, { left: px(img.x), top: px(img.y), width: px(img.w), height: px(img.h) });
+    link.append(el);
+    set.append(link);
+  }
+  return set;
+}
+
+// El diseño de Figma está hecho en español. En otro idioma, cada bloque de texto se reduce
+// lo necesario para ocupar como máximo el mismo alto y ancho que ocupa en español, así la
+// composición no se desborda ni se monta sobre la navegación.
+const referenceCache = new Map();
+
+// Ancho real de las líneas (no de la caja): así un texto alineado a la derecha no se sale
+// del panel aunque su caja siga midiendo lo mismo.
+function contentWidth(el) {
+  const range = document.createRange();
+  range.selectNodeContents(el);
+  const scale = stage.getBoundingClientRect().width / DESIGN_W || 1;
+  return range.getBoundingClientRect().width / scale;
+}
+
+function referenceBox(block) {
+  if (referenceCache.has(block)) return referenceCache.get(block);
+  const el = buildText(block, "es");
+  el.style.visibility = "hidden";
+  copyRoot.append(el);
+  const box = { w: contentWidth(el), h: el.offsetHeight };
+  el.remove();
+  if (document.fonts.status === "loaded") referenceCache.set(block, box);
+  return box;
+}
+
+function scaleText(el, scale) {
+  for (const node of [el, ...el.querySelectorAll("[data-size]")]) {
+    if (node.dataset.size) node.style.fontSize = px(Number(node.dataset.size) * scale);
+  }
+}
+
+function fitCopy(set, slide) {
+  if (lang === "es") return;
+  set.querySelectorAll(".t").forEach((el, k) => {
+    const ref = referenceBox(slide.texts[k]);
+    let scale = 1;
+    while (scale > 0.6 && (el.offsetHeight > ref.h + 2 || contentWidth(el) > ref.w + 2)) {
+      scale -= 0.02;
+      scaleText(el, scale);
+    }
+  });
+}
+
+function setCopy(slide, animate = true) {
+  const next = buildCopy(slide);
+  const old = [...copyRoot.children];
+  copyRoot.append(next);
+  fitCopy(next, slide);
+  if (animate) {
+    old.forEach((el) => {
+      el.classList.remove("is-visible");
+      el.classList.add("is-leaving");
+    });
+    requestAnimationFrame(() => requestAnimationFrame(() => next.classList.add("is-visible")));
+    window.setTimeout(() => old.forEach((el) => el.remove()), 400);
+  } else {
+    old.forEach((el) => el.remove());
+    next.classList.add("is-visible");
+    next.style.transitionDelay = "0s";
+  }
+}
+
+// La navegación en Figma aparece de dos formas: repartida (diapositiva 1)
+// o apilada bajo el texto (flechas arriba, engranaje y pantalla completa abajo).
+function setNav(slide) {
+  const nav = slide.nav;
+  if (nav.stack) {
+    const { x, y, gap } = nav.stack;
+    const row2 = y + 61 + gap;
+    move(navArrows, x + 210.5, y);
+    move(langToggle, x, row2 + 5);
+    move(fullscreenBtn, x + 421 - 62, row2);
+  } else {
+    move(navArrows, nav.arrows.cx, nav.arrows.y);
+    move(langToggle, nav.gear.x, nav.gear.y);
+    move(fullscreenBtn, nav.fullscreen.x, nav.fullscreen.y);
+  }
+  move(brandForum, slide.brand.forum.x, slide.brand.forum.y);
+  move(brandNinety, slide.brand.ninety.x, slide.brand.ninety.y);
+
+  const first = index === 0;
+  const last = index === SLIDES.length - 1;
+  prevBtn.disabled = first;
+  nextBtn.disabled = last;
+  prevBtn.querySelector("img").src = ICONS + (first ? "arrow-left-slide1.svg" : "arrow-left.svg");
+  nextBtn.querySelector("img").src = ICONS + (last ? "arrow-right-last.svg" : "arrow-right.svg");
+  counter.textContent = `${index + 1}/${SLIDES.length}`;
+}
+
+// Zonas desde donde nacen las partículas al entrar a una diapositiva: los paneles de vidrio
+// (recortados a la pantalla) o, si la diapositiva no tiene panel, los bloques de texto.
+function birthAreas(slide) {
+  const clip = (r) => {
+    const x0 = Math.max(0, r.x);
+    const y0 = Math.max(0, r.y);
+    const x1 = Math.min(DESIGN_W, r.x + r.w);
+    const y1 = Math.min(DESIGN_H, r.y + r.h);
+    return x1 - x0 > 20 && y1 - y0 > 20 ? { x: x0, y: y0, w: x1 - x0, h: y1 - y0 } : null;
+  };
+  if (slide.birth) return slide.birth.map(clip).filter(Boolean);
+  if (slide.panels.length) return slide.panels.map(clip).filter(Boolean);
+  const stageRect = stage.getBoundingClientRect();
+  const scale = stageRect.width / DESIGN_W;
+  const set = copyRoot.lastElementChild;
+  return [...set.querySelectorAll(".t")]
+    .map((el) => {
+      const r = el.getBoundingClientRect();
+      return clip({ x: (r.left - stageRect.left) / scale, y: (r.top - stageRect.top) / scale, w: r.width / scale, h: r.height / scale });
+    })
+    .filter(Boolean);
+}
+
+function go(i, { animate = true } = {}) {
+  const nextIndex = Math.max(0, Math.min(SLIDES.length - 1, i));
+  if (nextIndex === index && animate) return;
+  index = nextIndex;
+  const slide = SLIDES[index];
+  stage.dataset.slide = slide.id;
+  stage.classList.toggle("is-light", Boolean(slide.light));
+  stage.classList.toggle("particles-front", Boolean(slide.particlesFront));
+  setBackground(slide);
+  setPanels(slide);
+  setCopy(slide, animate);
+  setNav(slide);
+  particles.setScene(slide.scene, birthAreas(slide));
+  if (location.hash !== `#${index + 1}`) history.replaceState(null, "", `#${index + 1}`);
+}
+
+// ---------- Idioma y ayuda ----------
+
+function applyLanguage(nextLang) {
+  lang = nextLang;
+  try {
+    localStorage.setItem("forum-lang", lang);
+  } catch {}
+  document.documentElement.lang = lang === "pt" ? "pt-BR" : "es";
+  langToggle.dataset.lang = lang;
+  const ui = UI_COPY[lang];
+  help.querySelectorAll(".help__chip").forEach((chip, k) => {
+    chip.textContent = ui.help[k];
+  });
+  setCopy(SLIDES[index], false);
+}
+
+function toggle(el, button, force) {
+  const open = force ?? !el.classList.contains("is-open");
+  el.classList.toggle("is-open", open);
+  button.setAttribute("aria-expanded", String(open));
+}
+
+let noticeTimer = 0;
+function showNotice(text) {
+  notice.textContent = text;
+  notice.classList.add("is-visible");
+  window.clearTimeout(noticeTimer);
+  noticeTimer = window.setTimeout(() => notice.classList.remove("is-visible"), 4200);
+}
+
+async function toggleFullscreen() {
+  const root = document.documentElement;
+  try {
+    if (document.fullscreenElement || document.webkitFullscreenElement) {
+      if (document.exitFullscreen) await document.exitFullscreen();
+      else document.webkitExitFullscreen();
+    } else if (root.requestFullscreen) {
+      // algunos navegadores integrados dejan la petición sin respuesta: se espera como máximo 1,5 s
+      await Promise.race([
+        root.requestFullscreen({ navigationUI: "hide" }),
+        new Promise((_, reject) => window.setTimeout(() => {
+          if (!document.fullscreenElement) reject(new Error("sin respuesta"));
+        }, 1500)),
+      ]);
+    } else if (root.webkitRequestFullscreen) {
+      root.webkitRequestFullscreen();
+    } else {
+      throw new Error("Fullscreen API no disponible");
+    }
+  } catch {
+    showNotice(UI_COPY[lang].fullscreenBlocked);
+  }
+}
+
+// ---------- Eventos ----------
+
+prevBtn.addEventListener("click", () => go(index - 1));
+nextBtn.addEventListener("click", () => go(index + 1));
+fullscreenBtn.addEventListener("click", toggleFullscreen);
+gearBtn.addEventListener("click", () => toggle(langToggle, gearBtn));
+helpBtn.addEventListener("click", () => toggle(help, helpBtn));
+langToggle.querySelectorAll("[data-lang]").forEach((btn) => {
+  btn.addEventListener("click", () => applyLanguage(btn.dataset.lang));
+});
+
 window.addEventListener("keydown", (event) => {
+  if (event.altKey || event.ctrlKey || event.metaKey) return;
   const key = event.key.toLowerCase();
-  if (key === "arrowright" || key === " ") {
+  if (key === "arrowright" || key === " " || key === "pagedown") {
     event.preventDefault();
-    nextMoment();
-  }
-  if (key === "arrowleft") {
+    go(index + 1);
+  } else if (key === "arrowleft" || key === "pageup") {
     event.preventDefault();
-    previousMoment();
-  }
-  if (key === "f") {
-    event.preventDefault();
+    go(index - 1);
+  } else if (key === "f") {
     toggleFullscreen();
-  }
-  if (key === "h") {
-    event.preventDefault();
-    toggleHelp();
-  }
-  if (key === "r") {
-    event.preventDefault();
-    setMoment(0);
+  } else if (key === "h") {
+    toggle(help, helpBtn);
+  } else if (key === "r") {
+    go(0);
   }
 });
 
-let touchStartX = 0;
-stage.addEventListener("touchstart", (event) => {
-  touchStartX = event.changedTouches[0].clientX;
+let touchX = 0;
+stage.addEventListener("touchstart", (e) => { touchX = e.changedTouches[0].clientX; }, { passive: true });
+stage.addEventListener("touchend", (e) => {
+  const dx = e.changedTouches[0].clientX - touchX;
+  if (Math.abs(dx) > 42) go(index + (dx < 0 ? 1 : -1));
 });
 
-stage.addEventListener("touchend", (event) => {
-  const delta = event.changedTouches[0].clientX - touchStartX;
-  if (Math.abs(delta) < 42) return;
-  if (delta < 0) nextMoment();
-  else previousMoment();
+window.addEventListener("resize", fit);
+document.addEventListener("fullscreenchange", fit);
+document.addEventListener("webkitfullscreenchange", fit);
+document.fonts.ready.then(() => {
+  referenceCache.clear();
+  setCopy(SLIDES[index], false);
+});
+window.addEventListener("hashchange", () => {
+  const n = parseInt(location.hash.slice(1), 10);
+  if (n) go(n - 1);
 });
 
-totalEl.textContent = String(moments.length);
-mobileTotalEl.textContent = String(moments.length);
-qrMemoryLink.href = CONFIG.qr.memoryUrl;
-qrSocialLink.href = CONFIG.qr.socialUrl;
-makeQrPattern(qrMemory, CONFIG.qr.memoryUrl, CONFIG.qr.memoryImage);
-makeQrPattern(qrSocial, CONFIG.qr.socialUrl, CONFIG.qr.socialImage);
-updateLanguageUi();
-updateHelpUi();
-setMoment(0);
-tick();
+// ---------- Arranque ----------
+
+let last = performance.now();
+function loop(now) {
+  const dt = Math.min(0.05, (now - last) / 1000);
+  last = now;
+  particles.step(dt);
+  particles.draw();
+  requestAnimationFrame(loop);
+}
+
+fit();
+applyLanguage(lang);
+const startAt = parseInt(location.hash.slice(1), 10);
+index = -1;
+go(Number.isFinite(startAt) ? startAt - 1 : 0, { animate: false });
+requestAnimationFrame(loop);
