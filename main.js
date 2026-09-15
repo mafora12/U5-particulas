@@ -22,6 +22,11 @@ const notice = $("#notice");
 
 const particles = new ParticleSystem($("#particles"));
 
+const LINKS = {
+  social: { url: CONFIG.qr.socialUrl, image: CONFIG.qr.socialImage, alt: "Código QR @centrodeeventosupb" },
+  mobile: { url: CONFIG.qr.mobileUrl, image: CONFIG.qr.mobileImage, alt: "Código QR de la versión para celular" },
+};
+
 const storedLang = (() => {
   try {
     return localStorage.getItem("forum-lang");
@@ -105,8 +110,8 @@ function buildText(block, language = lang) {
     if (block.w) el.style.width = px(block.w);
   }
 
-  const target = block.link === "social"
-    ? Object.assign(document.createElement("a"), { href: CONFIG.qr.socialUrl, target: "_blank", rel: "noopener noreferrer" })
+  const target = block.link
+    ? Object.assign(document.createElement("a"), { href: LINKS[block.link].url, target: "_blank", rel: "noopener noreferrer" })
     : el;
 
   for (const part of block.parts) {
@@ -129,8 +134,9 @@ function buildCopy(slide) {
   set.className = "copy-set";
   for (const block of slide.texts) set.append(buildText(block));
   for (const img of slide.images || []) {
-    const link = Object.assign(document.createElement("a"), { href: CONFIG.qr.socialUrl, target: "_blank", rel: "noopener noreferrer" });
-    const el = Object.assign(document.createElement("img"), { className: "copy-img", src: CONFIG.qr.socialImage, alt: "Código QR @centrodeeventosupb" });
+    const info = LINKS[img.key];
+    const link = Object.assign(document.createElement("a"), { href: info.url, target: "_blank", rel: "noopener noreferrer" });
+    const el = Object.assign(document.createElement("img"), { className: "copy-img", src: info.image, alt: info.alt });
     Object.assign(el.style, { left: px(img.x), top: px(img.y), width: px(img.w), height: px(img.h) });
     link.append(el);
     set.append(link);

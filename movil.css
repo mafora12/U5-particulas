@@ -1,0 +1,463 @@
+/* Versión para celular: mismo lenguaje visual del Figma (fondos, vidrio, Rajdhani,
+   flechas, engranaje) reorganizado en una columna que se adapta a la pantalla. */
+
+:root {
+  --ink: #f4f3ef;
+  --base: #101114;
+  --font: "Rajdhani", "Arial Narrow", "Segoe UI", sans-serif;
+  --move: 0.8s cubic-bezier(0.65, 0, 0.35, 1);
+  --gap: 16px;
+  --top: calc(env(safe-area-inset-top, 0px) + 64px);
+  --bottom: calc(env(safe-area-inset-bottom, 0px) + 84px);
+  --k: 0.4;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  height: 100%;
+  background: var(--base);
+  overflow: hidden;
+  overscroll-behavior: none;
+}
+
+body {
+  font-family: var(--font);
+  color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+}
+
+button:focus-visible,
+a:focus-visible {
+  outline: 2px solid #65e6e2;
+  outline-offset: 3px;
+  border-radius: 10px;
+}
+
+.m-app {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  touch-action: pan-y;
+}
+
+/* ---------- Fondo y partículas ---------- */
+
+.m-bg,
+.m-bg > div {
+  position: absolute;
+  inset: 0;
+}
+
+.m-bg > div {
+  background-size: cover;
+  background-position: center;
+  opacity: 0;
+  transition: opacity var(--move);
+}
+
+.m-bg > div.is-visible {
+  opacity: 1;
+}
+
+.m-particles {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.m-app.particles-front .m-particles {
+  z-index: 3;
+}
+
+/* ---------- Vidrio ---------- */
+
+.m-glass {
+  position: absolute;
+  z-index: 2;
+  left: 0;
+  top: 0;
+  width: 0;
+  height: 0;
+  opacity: 0;
+  background: rgba(244, 243, 239, 0.06);
+  backdrop-filter: blur(var(--blur, 28px)) saturate(112%) brightness(1.05);
+  -webkit-backdrop-filter: blur(var(--blur, 28px)) saturate(112%) brightness(1.05);
+  box-shadow:
+    inset 0 1.5px 0 rgba(255, 255, 255, 0.2),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+  pointer-events: none;
+  transition:
+    left var(--move),
+    top var(--move),
+    width var(--move),
+    height var(--move),
+    border-radius var(--move),
+    opacity 0.5s ease;
+}
+
+.m-glass::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0) 45%);
+}
+
+.m-glass.is-visible {
+  opacity: 1;
+}
+
+/* ---------- Marca ---------- */
+
+.m-header {
+  position: absolute;
+  z-index: 4;
+  top: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: calc(env(safe-area-inset-top, 0px) + 14px) var(--gap) 0;
+  pointer-events: none;
+}
+
+.m-brand-forum {
+  height: 30px;
+  width: auto;
+}
+
+.m-brand-ninety {
+  height: 38px;
+  width: auto;
+}
+
+/* ---------- Tarjeta de texto ---------- */
+
+.m-card {
+  position: absolute;
+  z-index: 4;
+  left: var(--gap);
+  right: var(--gap);
+  max-width: 560px;
+  margin: 0 auto;
+  padding: 28px 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  text-align: center;
+  opacity: 0;
+  transform: translateY(12px);
+  transition:
+    opacity 0.45s ease,
+    transform 0.6s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.m-card.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+.m-card[data-anchor="top"] {
+  top: calc(var(--top) + 8px);
+}
+
+.m-card[data-anchor="center"] {
+  top: 50%;
+  translate: 0 -50%;
+}
+
+.m-card[data-anchor="bottom"] {
+  bottom: calc(var(--bottom) + 8px);
+}
+
+.m-card[data-align="right"] {
+  text-align: right;
+}
+
+.m-t {
+  margin: 0;
+  font-weight: 700;
+  line-height: 1.09;
+  font-size: max(14px, calc(var(--fs, 48) * var(--k) * 1px));
+  overflow-wrap: break-word;
+}
+
+.m-t span[data-size] {
+  font-size: max(14px, calc(var(--fs) * var(--k) * 1px));
+}
+
+.m-t a {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 4px;
+}
+
+/* ---------- Navegación ---------- */
+
+.m-nav {
+  position: absolute;
+  z-index: 5;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: var(--bottom);
+  padding: 0 var(--gap) env(safe-area-inset-bottom, 0px);
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  background: linear-gradient(to top, rgba(16, 17, 20, 0.55), rgba(16, 17, 20, 0));
+}
+
+.m-arrows {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+}
+
+.m-arrow {
+  position: relative;
+  width: 40px;
+  height: 34px;
+  flex: none;
+}
+
+.m-arrow img {
+  position: absolute;
+  left: -3.1px;
+  top: -0.35px;
+  width: 46.2px;
+  height: 40.3px;
+  display: block;
+}
+
+.m-arrow--prev {
+  transform: scaleX(-1);
+}
+
+.m-arrow:disabled {
+  cursor: default;
+}
+
+.m-counter {
+  font-weight: 500;
+  font-size: 26px;
+  line-height: 1;
+  min-width: 58px;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+.m-fullscreen {
+  justify-self: end;
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+}
+
+.m-fullscreen img {
+  display: block;
+  width: 44px;
+  height: 44px;
+}
+
+.m-fullscreen[hidden] {
+  display: none;
+}
+
+/* Componente 1 (engranaje + selector de idioma), a escala de celular */
+
+.m-lang {
+  position: relative;
+  justify-self: start;
+  width: 44px;
+  height: 44px;
+}
+
+.m-lang__gear {
+  position: relative;
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+}
+
+.m-lang__gear img {
+  position: absolute;
+  transition:
+    transform 0.3s ease-in,
+    opacity 0.3s ease-in;
+}
+
+.m-lang__gear .gear-closed {
+  width: 33px;
+  height: 31px;
+  left: 5.5px;
+  top: 6.5px;
+}
+
+.m-lang__gear .gear-open {
+  width: 31px;
+  height: 33px;
+  left: 6.5px;
+  top: 5.5px;
+  opacity: 0;
+}
+
+.m-lang__pill {
+  position: absolute;
+  left: 0;
+  bottom: 54px;
+  width: 132px;
+  height: 36px;
+  border-radius: 36px;
+  background: linear-gradient(90deg, rgba(101, 230, 226, 0.43) 11.5%, rgba(142, 141, 139, 0.25));
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  clip-path: inset(100% 0 0 0 round 36px);
+  opacity: 0;
+  pointer-events: none;
+  transition:
+    clip-path 0.3s ease-in,
+    opacity 0.3s ease-in;
+}
+
+.m-lang__highlight {
+  position: absolute;
+  left: 4px;
+  top: 4px;
+  width: 62px;
+  height: 28px;
+  border-radius: 28px;
+  background: rgba(255, 255, 255, 0.28);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.35);
+  transition: left 0.3s ease-out;
+}
+
+.m-lang[data-lang="pt"] .m-lang__highlight {
+  left: 66px;
+}
+
+.m-lang__pill button {
+  position: absolute;
+  top: 0;
+  width: 66px;
+  height: 36px;
+  font-weight: 500;
+  font-size: 22px;
+  line-height: 36px;
+  color: #ffffff;
+}
+
+.m-lang__pill button[data-lang="es"] {
+  left: 0;
+}
+
+.m-lang__pill button[data-lang="pt"] {
+  left: 66px;
+}
+
+.m-lang.is-open .m-lang__gear img {
+  transition-timing-function: ease-out;
+}
+
+.m-lang.is-open .gear-closed {
+  opacity: 0;
+  transform: rotate(-90deg);
+}
+
+.m-lang.is-open .gear-open {
+  opacity: 1;
+  transform: rotate(-90deg);
+}
+
+.m-lang.is-open .m-lang__pill {
+  clip-path: inset(0 0 0 0 round 36px);
+  opacity: 1;
+  pointer-events: auto;
+  transition-timing-function: ease-out;
+}
+
+/* Avisos (deslizar / pantalla completa) */
+
+.m-hint {
+  position: absolute;
+  z-index: 6;
+  left: 50%;
+  bottom: calc(var(--bottom) + 4px);
+  margin: 0;
+  max-width: calc(100% - 2 * var(--gap));
+  padding: 8px 18px;
+  border-radius: 30px;
+  background: rgba(16, 17, 20, 0.7);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  font-weight: 500;
+  font-size: 16px;
+  text-align: center;
+  opacity: 0;
+  transform: translate(-50%, 8px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  pointer-events: none;
+}
+
+.m-hint.is-visible {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
+/* ---------- Celular en horizontal ---------- */
+
+@media (orientation: landscape) and (max-height: 560px) {
+  :root {
+    --top: calc(env(safe-area-inset-top, 0px) + 52px);
+    --bottom: calc(env(safe-area-inset-bottom, 0px) + 64px);
+  }
+
+  .m-brand-forum {
+    height: 24px;
+  }
+
+  .m-brand-ninety {
+    height: 30px;
+  }
+
+  .m-card {
+    right: auto;
+    width: min(56vw, 560px);
+    margin: 0;
+    padding: 18px 22px;
+  }
+
+  .m-card[data-anchor] {
+    top: calc(var(--top) + (100% - var(--top) - var(--bottom)) / 2);
+    bottom: auto;
+    translate: 0 -50%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --move: 0.01s linear;
+  }
+}

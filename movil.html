@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#101114" />
+    <title>Fórum UPB | Relevo generacional · Celular</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="./movil.css" />
+  </head>
+  <body>
+    <main class="m-app" id="app" aria-label="Presentación Relevo generacional · Fórum UPB">
+      <div class="m-bg" id="bg" aria-hidden="true"></div>
+      <canvas class="m-particles" id="particles" aria-hidden="true"></canvas>
+      <div class="m-glass" id="glass" aria-hidden="true"></div>
+
+      <header class="m-header">
+        <img class="m-brand-forum" src="./assets/brand-forum.png" alt="UPB Fórum Centro de Eventos" />
+        <img class="m-brand-ninety" src="./assets/brand-90.png" alt="UPB 90 años" />
+      </header>
+
+      <section class="m-card" id="card" aria-live="polite"></section>
+
+      <p class="m-hint" id="hint" role="status"></p>
+      <p class="m-hint m-notice" id="notice" role="status"></p>
+
+      <nav class="m-nav" aria-label="Navegación">
+        <div class="m-lang" id="lang-toggle">
+          <button class="m-lang__gear" id="gear" type="button" aria-label="Idioma" aria-expanded="false">
+            <img class="gear-closed" src="./assets/icons/gear-closed.svg" alt="" />
+            <img class="gear-open" src="./assets/icons/gear-open-vector.svg" alt="" />
+          </button>
+          <div class="m-lang__pill">
+            <span class="m-lang__highlight"></span>
+            <button type="button" data-lang="es">Esp</button>
+            <button type="button" data-lang="pt">Por</button>
+          </div>
+        </div>
+
+        <div class="m-arrows">
+          <button class="m-arrow m-arrow--prev" id="prev" type="button" aria-label="Diapositiva anterior">
+            <img src="./assets/icons/arrow-left.svg" alt="" />
+          </button>
+          <span class="m-counter" id="counter">1/13</span>
+          <button class="m-arrow m-arrow--next" id="next" type="button" aria-label="Diapositiva siguiente">
+            <img src="./assets/icons/arrow-right.svg" alt="" />
+          </button>
+        </div>
+
+        <button class="m-fullscreen" id="fullscreen" type="button" aria-label="Pantalla completa">
+          <img src="./assets/icons/fullscreen.svg" alt="" />
+        </button>
+      </nav>
+    </main>
+
+    <script src="./config.js"></script>
+    <script src="./slides.js"></script>
+    <script src="./particles.js"></script>
+    <script src="./movil.js"></script>
+  </body>
+</html>

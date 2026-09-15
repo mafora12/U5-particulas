@@ -275,8 +275,8 @@ window.SLIDES = [
     ],
     texts: [
       {
-        cx: 416, y: 382, w: 542, size: 48,
-        parts: [{ es: "QR para tener la presentación online en el teléfono", pt: "QR para ter a apresentação online no celular" }],
+        cx: 416, y: 169, w: 542, size: 48, weight: 500, link: "mobile",
+        parts: [{ es: "Versión para celular", pt: "Versão para celular" }],
       },
       {
         cx: 416, y: 706, w: 542, size: 48,
@@ -294,7 +294,18 @@ window.SLIDES = [
         parts: [{ es: "@centrodeeventosupb", pt: "@centrodeeventosupb" }],
       },
     ],
-    images: [{ key: "social", x: 1184, y: 239, w: 501, h: 501 }],
+    images: [
+      { key: "mobile", x: 196, y: 239, w: 440, h: 440 },
+      { key: "social", x: 1184, y: 239, w: 501, h: 501 },
+    ],
+    // En el celular no tiene sentido escanear un QR con el mismo teléfono: se muestran enlaces.
+    mobile: {
+      texts: [
+        { size: 48, weight: 500, parts: [{ es: "Sigue conectado con", pt: "Continue conectado com" }] },
+        { size: 64, link: "social", color: C.cyan, parts: [{ es: "@centrodeeventosupb", pt: "@centrodeeventosupb" }] },
+        { size: 40, parts: [{ es: "Memorias (app móvil)", pt: "Memórias (app móvel)" }] },
+      ],
+    },
     nav: { stack: { x: 722, y: 892, gap: 0 } },
   },
 ];

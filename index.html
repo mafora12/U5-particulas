@@ -4,6 +4,12 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Fórum UPB | Relevo generacional</title>
+    <script>
+      // En un celular se abre la versión adaptada (agregar ?escritorio a la URL para evitarlo).
+      if (!location.search.includes("escritorio") && matchMedia("(pointer: coarse) and (max-width: 900px)").matches) {
+        location.replace("./movil.html" + location.hash);
+      }
+    </script>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;700&display=swap" rel="stylesheet" />

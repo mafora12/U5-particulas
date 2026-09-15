@@ -100,6 +100,16 @@ vincularse con quién), **qué la hace crecer o romperse** (distancia, tiempo, o
 - Componente 1: el engranaje despliega el selector **Esp / Por** (0,3 s).
 - Componente 2: el botón **?** despliega los atajos de teclado (0,3 s).
 
+## Versión para celular
+
+- La composición de Figma se reorganiza en una columna: marca arriba, tarjeta de vidrio con la
+  frase (arriba, al centro o abajo según dónde está el texto en el diseño) y navegación abajo.
+- El vidrio conserva la forma de las esquinas de cada panel de Figma, a escala de celular.
+- Las partículas usan las mismas escenas y relaciones; la escena completa se proyecta sobre la
+  pantalla vertical (se estira), así ninguna estructura queda recortada. Siguen naciendo del vidrio.
+- En la última diapositiva no se muestran códigos QR (no se escanean con el mismo teléfono):
+  se muestran enlaces.
+
 ## Archivos
 
 - `index.html` — estructura.
@@ -107,4 +117,5 @@ vincularse con quién), **qué la hace crecer o romperse** (distancia, tiempo, o
 - `slides.js` — textos (es/pt), fondos, paneles y posiciones de cada diapositiva.
 - `particles.js` — motor de partículas y una escena por diapositiva.
 - `main.js` — navegación, idioma, transiciones y escalado.
-- `config.js` — idioma inicial, enlace del QR y duración de transición.
+- `config.js` — idioma inicial, enlaces y QR, duración de transición.
+- `movil.html`, `movil.css`, `movil.js` — versión para celular.

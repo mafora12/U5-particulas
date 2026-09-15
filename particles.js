@@ -905,12 +905,24 @@
       this.reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     }
 
+    // Escritorio: el lienzo 1920 × 1080 se escala igual en ambos ejes.
     resize(scale) {
-      this.scale = scale;
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
       this.canvas.width = Math.max(1, Math.round(W * scale * dpr));
       this.canvas.height = Math.max(1, Math.round(H * scale * dpr));
-      this.pixel = scale * dpr;
+      this.sx = scale * dpr;
+      this.sy = scale * dpr;
+    }
+
+    // Celular: la escena completa se estira para llenar la pantalla (vertical u horizontal).
+    // Las relaciones se calculan igual; solo cambia cómo se proyectan. Las partículas se
+    // siguen dibujando redondas.
+    resizeView(width, height) {
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      this.canvas.width = Math.max(1, Math.round(width * dpr));
+      this.canvas.height = Math.max(1, Math.round(height * dpr));
+      this.sx = (width / W) * dpr;
+      this.sy = (height / H) * dpr;
     }
 
     // Al entrar a una diapositiva las partículas nacen dentro del panel de vidrio (o del
@@ -1025,7 +1037,10 @@
       ctx.setTransform(1, 0, 0, 1, 0, 0);
       ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
       if (!scene) return;
-      ctx.setTransform(this.pixel, 0, 0, this.pixel, 0, 0);
+      ctx.setTransform(this.sx, 0, 0, this.sy, 0, 0);
+      const round = Math.sqrt(this.sx * this.sy) * (this.sizeBoost || 1);
+      const kx = round / this.sx;
+      const ky = round / this.sy;
       ctx.globalCompositeOperation = "source-over";
 
       scene.draw?.(this, ctx, this.t);
@@ -1041,7 +1056,7 @@
         if (a < 0.01) continue;
         const col = scene.linkColor ? scene.linkColor(p, q) : mix(p.col, q.col, 0.5);
         ctx.strokeStyle = rgba(col, a);
-        ctx.lineWidth = 0.6 + s * 1.6;
+        ctx.lineWidth = (0.6 + s * 1.6) * (this.lineBoost || 1);
         ctx.beginPath();
         ctx.moveTo(p.x, p.y);
         ctx.lineTo(q.x, q.y);
@@ -1054,11 +1069,12 @@
         const halo = p.r * (3 + p.glow * 2.4);
         ctx.fillStyle = rgba(p.col, p.a * (0.13 + p.glow * 0.22));
         ctx.beginPath();
-        ctx.arc(p.x, p.y, halo, 0, TAU);
+        ctx.ellipse(p.x, p.y, halo * kx, halo * ky, 0, 0, TAU);
         ctx.fill();
         ctx.fillStyle = rgba(p.col, p.a);
+        const core = p.r * (1 + p.glow * 0.35);
         ctx.beginPath();
-        ctx.arc(p.x, p.y, p.r * (1 + p.glow * 0.35), 0, TAU);
+        ctx.ellipse(p.x, p.y, core * kx, core * ky, 0, 0, TAU);
         ctx.fill();
       }
       ctx.globalCompositeOperation = "source-over";
