@@ -35,7 +35,3 @@ y abrir `http://localhost:8123`. Se puede ir directo a una diapositiva con `#nú
 
 ## Diseño diapositivas   
 https://www.figma.com/design/wINLpyUOSzYRDlTden2Q8A/juan_franco_u5?node-id=0-1&t=ifqUYOIkmIFDKH7V-1  
-
-
-Para cambiar textos o enlaces revisa `GUIA_CAMBIOS_RAPIDOS.md`.
-El concepto y la gramática visual están en `DECISIONES_SISTEMA_VISUAL.md`.
