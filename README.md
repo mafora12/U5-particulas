@@ -1,7 +1,4 @@
-# Relevo generacional | Presentación generativa
-
-Presentación web para la charla de Fórum UPB en Future Leaders Forum 2026, construida con
-HTML, CSS y JavaScript a partir del diseño de Figma y un sistema de partículas.
+# Relevo generacional | Presentación generativa  
 
 ## Ver la presentación
 
