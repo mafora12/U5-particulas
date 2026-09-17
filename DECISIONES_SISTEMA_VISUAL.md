@@ -57,9 +57,10 @@ Forum, como pide la invitación del cliente.
 5. **El impacto sí** — Los tres grupos convergen en un punto (el evento). De ese punto sale una
    onda que atraviesa todo el espacio, enciende a las personas y deja vínculos nuevos a su paso.
    *El evento es un punto; el impacto llega lejos.*
-6. **Una comunidad trae transformación** — Primero llegan personas sueltas y blancas (el evento).
-   Luego se tejen vínculos; cuanto más conectada está una persona, más cambia hacia el rosa y
-   más crece. *La comunidad transforma.*
+6. **Una comunidad trae transformación** — Lectura literal: las personas hacen fila y entran por
+   una puerta estrecha; eso es el evento, y la puerta sigue siendo la misma después de que pasan.
+   Luego esas mismas personas, con su propio cuerpo, levantan una puerta mucho más ancha.
+   *La comunidad no ocupa el espacio: lo transforma.*
 7. **El talento crece a la velocidad de la confianza** — Todas giran juntas sin cambiar su
    posición relativa, así la cercanía se sostiene. Los vínculos se fortalecen despacio y el
    tamaño/brillo (talento) de cada partícula depende de la confianza acumulada.
@@ -68,15 +69,19 @@ Forum, como pide la invitación del cliente.
    y en algún punto se desvían, dejando rastros propios. Aquí las partículas nacen en la franja
    entre la frase y la navegación y pasan **por encima** del vidrio: el camino atraviesa el
    espacio del discurso en lugar de rodearlo.
-9. **Una visión. Dos generaciones.** — Un único punto de luz: la visión. Cada generación orbita a
-   su ritmo (amplia y lenta / cercana, rápida y en sentido contrario). Solo hay vínculos dentro
-   de cada generación. *Dos ritmos, un centro.*
-10. **Ocurre cuando trabajan juntas** — Cada persona con experiencia forma pareja con una joven;
-    giran juntas sin ocupar el lugar de la otra. De las parejas nacen partículas nuevas.
-    *El crecimiento sale de la colaboración, no del reemplazo.*
-11. **Los jóvenes son el presente** — Los jóvenes aparecen en un punto lejano, casi invisibles
-    (el “futuro”), avanzan hacia el frente, crecen, se encienden y se conectan. La experiencia
-    se retira al fondo. *No son futuro lejano: están aquí.*
+9. **Una visión. Dos generaciones.** — Lectura literal: entre las dos generaciones dibujan un ojo.
+   La experiencia forma los párpados —el contorno que sostiene la mirada— y los jóvenes el iris que
+   gira dentro y las pestañas que asoman. El ojo parpadea cada tanto: está vivo. Ninguna de las dos
+   partes es el ojo por separado. *Una sola visión hecha de dos generaciones.*
+10. **Ocurre cuando trabajan juntas** — Lectura literal: un árbol que se levanta rama por rama.
+    Cada pieza la pone, por turnos, una partícula de cada generación, y una rama solo existe
+    cuando sus dos extremos están puestos: si una generación falta, esa rama no crece. Al
+    completarse el árbol brotan partículas nuevas en las puntas.
+    *El crecimiento es lo que producen juntas, no lo que queda tras un reemplazo.*
+11. **Los jóvenes son el presente** — Lectura literal: un radar. Los jóvenes ya están todos en la
+    pantalla desde el primer segundo, pero casi invisibles; el barrido los va encontrando y cada
+    uno que es visto se queda encendido y empieza a conectarse. Las organizaciones miran desde
+    afuera del radar. *No llegaron: siempre estuvieron ahí, solo faltaba verlos.*
 12. **El futuro no se hereda. Se construye.** — No aparece una estructura hecha: las dos
     generaciones, por turnos, llevan cada pieza a su lugar y un arco se levanta desde la base
     hasta la clave. Las vigas solo existen cuando sus dos extremos fueron colocados.
@@ -104,7 +109,9 @@ vincularse con quién), **qué la hace crecer o romperse** (distancia, tiempo, o
 
 - La composición de Figma se reorganiza en una columna: marca arriba, tarjeta de vidrio con la
   frase (arriba, al centro o abajo según dónde está el texto en el diseño) y navegación abajo.
-- El vidrio conserva la forma de las esquinas de cada panel de Figma, a escala de celular.
+- El vidrio es el fondo de la propia tarjeta de texto (no un elemento aparte), así nunca se
+  desalinea con la frase; conserva la forma de las esquinas de cada panel de Figma, a escala
+  de celular. En las diapositivas sin panel (3 y 6) el texto va suelto, con sombra para contraste.
 - Las partículas usan las mismas escenas y relaciones; la escena completa se proyecta sobre la
   pantalla vertical (se estira), así ninguna estructura queda recortada. Siguen naciendo del vidrio.
 - En la última diapositiva no se muestran códigos QR (no se escanean con el mismo teléfono):

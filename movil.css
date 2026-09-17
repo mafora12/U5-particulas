@@ -83,47 +83,6 @@ a:focus-visible {
   pointer-events: none;
 }
 
-.m-app.particles-front .m-particles {
-  z-index: 3;
-}
-
-/* ---------- Vidrio ---------- */
-
-.m-glass {
-  position: absolute;
-  z-index: 2;
-  left: 0;
-  top: 0;
-  width: 0;
-  height: 0;
-  opacity: 0;
-  background: rgba(244, 243, 239, 0.06);
-  backdrop-filter: blur(var(--blur, 28px)) saturate(112%) brightness(1.05);
-  -webkit-backdrop-filter: blur(var(--blur, 28px)) saturate(112%) brightness(1.05);
-  box-shadow:
-    inset 0 1.5px 0 rgba(255, 255, 255, 0.2),
-    inset 0 0 0 1px rgba(255, 255, 255, 0.1);
-  pointer-events: none;
-  transition:
-    left var(--move),
-    top var(--move),
-    width var(--move),
-    height var(--move),
-    border-radius var(--move),
-    opacity 0.5s ease;
-}
-
-.m-glass::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0) 45%);
-}
-
-.m-glass.is-visible {
-  opacity: 1;
-}
 
 /* ---------- Marca ---------- */
 
@@ -159,7 +118,8 @@ a:focus-visible {
   right: var(--gap);
   max-width: 560px;
   margin: 0 auto;
-  padding: 28px 22px;
+  padding: 30px 24px;
+  border-radius: var(--radii, 0);
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -174,6 +134,21 @@ a:focus-visible {
 .m-card.is-visible {
   opacity: 1;
   transform: none;
+}
+
+/* Vidrio: el mismo efecto del panel de Figma, aplicado a la tarjeta */
+.m-card[data-glass="on"] {
+  background: rgba(244, 243, 239, 0.06);
+  backdrop-filter: blur(var(--blur, 28px)) saturate(112%) brightness(1.05);
+  -webkit-backdrop-filter: blur(var(--blur, 28px)) saturate(112%) brightness(1.05);
+  box-shadow:
+    inset 0 1.5px 0 rgba(255, 255, 255, 0.2),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+}
+
+/* Sin panel en Figma (diapositivas 3 y 6): el texto va suelto y necesita contraste propio */
+.m-card[data-glass="off"] .m-t {
+  text-shadow: 0 2px 18px rgba(16, 17, 20, 0.85);
 }
 
 .m-card[data-anchor="top"] {

@@ -406,32 +406,103 @@
     },
 
     // 6 · UN EVENTO TRAE PERSONAS. UNA COMUNIDAD TRAE TRANSFORMACIÓN.
-    // Primero llegan personas sueltas, blancas, sin vínculos (el evento).
-    // Luego se tejen relaciones: cuanto más conectada está una persona, más cambia
-    // de color hacia el rosa y más crece (la transformación que trae la comunidad).
+    // Literal: primero las personas hacen fila y entran por una puerta estrecha (el evento).
+    // Después esas mismas personas, con su propio cuerpo, levantan una puerta mucho más ancha:
+    // la comunidad no solo ocupa el espacio, lo transforma.
     comunidad: {
-      link: { dist: 140, grow: 0.014, decay: 0.01, alpha: 0.55, spring: 0.0008, rest: 95 },
+      link: { dist: 150, grow: 0, decay: 0.03, alpha: 0.6 },
+      enter(sys) {
+        const door = [];
+        for (let k = 0; k <= 9; k++) door.push({ x: 300, y: 980 - k * 38 });
+        for (let k = 0; k <= 9; k++) door.push({ x: 520, y: 980 - k * 38 });
+        for (let k = 1; k < 6; k++) door.push({ x: 300 + (220 * k) / 6, y: 638 });
+        sys.door = door;
+        // el arco ancho que construye la comunidad
+        const arch = [];
+        const steps = 48;
+        for (let k = 0; k <= steps; k++) {
+          const f = k / steps;
+          const edge = Math.abs(f - 0.5) * 2;
+          arch.push({ x: lerp(80, 760, f), y: 1040 - 560 * Math.pow(Math.cos((edge * Math.PI) / 2), 0.8) });
+        }
+        sys.arch = arch;
+        const people = [...sys.byGen.exp, ...sys.byGen.young];
+        people.forEach((p, k) => {
+          p.role = k < door.length ? "door" : "walker";
+          p.slot = k < door.length ? door[k] : null;
+          p.archF = k / (people.length - 1);
+          p.archRow = (k % 3) - 1;
+          p.delay = (k - door.length) * 0.14;
+          p.plaza = { x: 140 + hash(k * 2.3) * 420, y: 220 + hash(k * 5.1) * 330 };
+        });
+      },
+      // punto del arco para un avance f (0 izquierda … 1 derecha), separado en tres hileras
+      archAt(sys, f, row) {
+        const arch = sys.arch;
+        const s = clamp(f, 0, 0.9999) * (arch.length - 1);
+        const i = Math.floor(s);
+        const a = arch[i];
+        const b = arch[Math.min(arch.length - 1, i + 1)];
+        const t = s - i;
+        const x = lerp(a.x, b.x, t);
+        const y = lerp(a.y, b.y, t);
+        const dx = b.x - a.x;
+        const dy = b.y - a.y;
+        const len = Math.hypot(dx, dy) || 1;
+        return { x: x - (dy / len) * row * 30, y: y + (dx / len) * row * 30 };
+      },
+      // fila por el suelo, giro hacia arriba al llegar a la puerta y salida a la plaza
+      path(u, plaza) {
+        if (u < 0.45) return { x: lerp(-90, 410, u / 0.45), y: 1020 };
+        if (u < 0.72) return { x: 410, y: lerp(1020, 700, (u - 0.45) / 0.27) };
+        const f = smooth((u - 0.72) / 0.28);
+        return { x: lerp(410, plaza.x, f), y: lerp(700, plaza.y, f) };
+      },
       update(sys, dt, t, st) {
-        this.link.grow = st > 2.4 ? 0.014 : 0;
-        const box = { x0: 540, x1: 1500, y0: 270, y1: 640 };
+        const cycle = st % 15;
+        const building = cycle > 6.5;
+        this.link.grow = building ? 0.05 : 0;
+        const prog = smooth((cycle - 6.5) / 2.5);
         for (const p of sys.ps) {
           if (p.gen === "child") { p.off(); continue; }
           p.reset();
-          const ang = p.h1 * TAU;
-          const rx = 480 + p.h2 * 480;
-          const ry = 330 + p.h2 * 290;
-          p.tx = clamp(1010 + Math.cos(ang) * rx, 30, 1890) + Math.sin(t * 0.4 + p.h3 * 20) * 22;
-          p.ty = clamp(470 + Math.sin(ang) * ry, 40, 1050) + Math.cos(t * 0.35 + p.h3 * 20) * 22;
-          p.k = st < 2.4 ? 0.006 : 0.0025;
-          const D = Math.min(1, p.deg / 2.4);
-          p.tc = mix(PAL.ink, p.gen === "exp" ? PAL.violet : PAL.pink, D);
-          p.ts = 1 + D * 0.55;
-          p.ta = 0.45 + D * 0.55;
-          // la frase queda libre: las personas rodean el texto
-          if (p.x > box.x0 && p.x < box.x1 && p.y > box.y0 && p.y < box.y1) {
-            p.ay += p.y < (box.y0 + box.y1) / 2 ? -0.25 : 0.25;
+          if (building) {
+            const spot = this.archAt(sys, p.archF, p.archRow);
+            p.tx = spot.x + Math.sin(t * 0.6 + p.h1 * 9) * 6;
+            p.ty = spot.y + Math.cos(t * 0.5 + p.h2 * 9) * 6;
+            p.k = 0.014;
+            p.tc = mix(PAL.ink, PAL.pink, prog);
+            p.ts = 1 + prog * 0.5;
+            p.ta = 0.95;
+          } else if (p.role === "door") {
+            p.tx = p.slot.x;
+            p.ty = p.slot.y;
+            p.k = 0.03;
+            p.tc = PAL.ink;
+            p.ta = 0.7;
+          } else {
+            const u = clamp((cycle - p.delay) / 3.4, 0, 1);
+            const pt = this.path(u, p.plaza);
+            p.tx = pt.x;
+            p.ty = pt.y;
+            p.k = 0.05;
+            p.fr = 0.8;
+            p.tc = PAL.ink;
+            p.ta = cycle < p.delay ? 0 : 0.9;
           }
         }
+      },
+      draw(sys, ctx) {
+        if (sys.st % 15 > 6.5) return;
+        // el marco de la puerta estrecha
+        ctx.strokeStyle = rgba(PAL.ink, 0.22);
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(300, 990);
+        ctx.lineTo(300, 638);
+        ctx.lineTo(520, 638);
+        ctx.lineTo(520, 990);
+        ctx.stroke();
       },
     },
 
@@ -585,172 +656,257 @@
     },
 
     // 9 · UNA VISIÓN. DOS GENERACIONES.
-    // Un único punto de luz arriba: la visión compartida. Cada generación gira a su
-    // manera alrededor de ella —la experiencia en una órbita amplia y lenta, los jóvenes
-    // en una órbita cercana, rápida y en sentido contrario—. Dos ritmos, un mismo centro.
+    // Literal: entre las dos generaciones dibujan un ojo. La experiencia forma los párpados
+    // (el contorno que sostiene la mirada) y los jóvenes el iris que gira dentro. El ojo
+    // parpadea: está vivo, y mira siempre hacia el mismo lado.
     vision: {
-      link: { dist: 75, grow: 0.03, decay: 0.03, alpha: 0.5, rule: (p, q) => p.gen === q.gen },
+      link: { dist: 85, grow: 0.04, decay: 0.04, alpha: 0.6, rule: (p, q) => p.part === q.part },
+      enter(sys) {
+        const lids = sys.byGen.exp;
+        const half = Math.floor(lids.length / 2);
+        lids.forEach((p, k) => {
+          const up = k < half;
+          const n = up ? half : lids.length - half;
+          const i = up ? k : k - half;
+          p.part = up ? "lid-up" : "lid-down";
+          p.s = (i / (n - 1)) * 2 - 1;
+        });
+        sys.byGen.young.forEach((p, k) => {
+          if (k < 90) {
+            p.part = "iris";
+            p.ang = ((k % 30) / 30) * TAU;
+            p.rad = 58 + Math.floor(k / 30) * 24;
+          } else {
+            p.part = "lash";
+            p.s = ((k - 90) / (sys.byGen.young.length - 91)) * 2 - 1;
+          }
+        });
+      },
       update(sys, dt, t) {
-        const V = { x: 960, y: 300 };
+        const C = { x: 960, y: 300 };
+        const a = 430;
+        const blink = Math.max(0, 1 - Math.abs(((t % 5.5) - 5) * 4));
+        const b = 150 * (1 - blink * 0.94);
         for (const p of sys.ps) {
           if (p.gen === "child") { p.off(); continue; }
           p.reset();
-          let ang, rx, ry, tilt;
-          if (p.gen === "exp") {
-            ang = p.h1 * TAU + t * 0.16;
-            rx = 500 + p.h2 * 60;
-            ry = 170 + p.h2 * 24;
-            tilt = 0.12;
-            p.tc = p.h3 < 0.5 ? PAL.violet : PAL.blue;
-          } else {
-            ang = p.h1 * TAU - t * 0.38;
-            rx = 350 + p.h2 * 80;
-            ry = 105 + p.h2 * 32;
-            tilt = -0.15;
+          const curve = Math.pow(Math.max(0, 1 - p.s * p.s), 0.85);
+          if (p.part === "lid-up" || p.part === "lid-down") {
+            const up = p.part === "lid-up";
+            p.tx = C.x + a * p.s;
+            p.ty = C.y + (up ? -1 : 1) * b * curve;
+            p.tc = up ? PAL.violet : PAL.blue;
+            p.k = 0.035;
+            p.ta = 0.95;
+          } else if (p.part === "iris") {
+            const ang = p.ang + t * 0.25;
+            const rr = p.rad * (1 - blink * 0.9);
+            p.tx = C.x + Math.cos(ang) * rr;
+            p.ty = C.y + Math.sin(ang) * rr * 0.92;
             p.tc = p.h3 < 0.3 ? PAL.pink : PAL.cyan;
+            p.k = 0.045;
+            p.ta = 0.95;
+            p.ts = 1.1;
+          } else {
+            // pestañas: los jóvenes que asoman por encima del párpado
+            const out = 1.3 + 0.28 * Math.sin(t * 0.9 + p.h1 * 9);
+            p.tx = C.x + a * p.s * 1.03;
+            p.ty = C.y - b * curve * out;
+            p.tc = PAL.cyan;
+            p.ta = 0.45;
+            p.k = 0.02;
           }
-          const ex = Math.cos(ang) * rx;
-          const ey = Math.sin(ang) * ry;
-          p.tx = V.x + ex * Math.cos(tilt) - ey * Math.sin(tilt);
-          p.ty = V.y + ex * Math.sin(tilt) + ey * Math.cos(tilt);
-          p.k = 0.012;
-          p.ta = 0.9;
         }
       },
       draw(sys, ctx, t) {
-        const V = { x: 960, y: 300 };
-        ctx.lineWidth = 1;
-        for (const p of sys.ps) {
-          if (!p.active || p.i % 4) continue;
-          ctx.strokeStyle = rgba(PAL.ink, 0.06 * p.a);
-          ctx.beginPath();
-          ctx.moveTo(p.x, p.y);
-          ctx.lineTo(V.x, V.y);
-          ctx.stroke();
-        }
-        const pulse = 1 + Math.sin(t * 1.6) * 0.15;
-        const g = ctx.createRadialGradient(V.x, V.y, 0, V.x, V.y, 70 * pulse);
-        g.addColorStop(0, "rgba(255,255,255,0.9)");
-        g.addColorStop(0.2, "rgba(244,243,239,0.35)");
-        g.addColorStop(1, "rgba(244,243,239,0)");
+        const C = { x: 960, y: 300 };
+        const blink = Math.max(0, 1 - Math.abs(((t % 5.5) - 5) * 4));
+        const r = 100 * (1 - blink * 0.9);
+        const g = ctx.createRadialGradient(C.x, C.y, 0, C.x, C.y, r);
+        g.addColorStop(0, "rgba(255,255,255,0.92)");
+        g.addColorStop(0.3, "rgba(101,230,226,0.3)");
+        g.addColorStop(1, "rgba(101,230,226,0)");
         ctx.fillStyle = g;
         ctx.beginPath();
-        ctx.arc(V.x, V.y, 70 * pulse, 0, TAU);
+        ctx.ellipse(C.x, C.y, r, r * 0.92, 0, 0, TAU);
         ctx.fill();
       },
     },
 
     // 10 · EL CRECIMIENTO NO OCURRE CUANDO UNA GENERACIÓN REEMPLAZA A OTRA. OCURRE CUANDO TRABAJAN JUNTAS.
-    // Cada persona con experiencia se une a una joven: giran juntas, ninguna ocupa el lugar
-    // de la otra. De esas parejas nacen partículas nuevas: el crecimiento sale de trabajar juntas.
+    // Literal: un árbol que se levanta rama por rama. Cada pieza la pone, por turnos, una
+    // partícula de cada generación, y una rama solo existe cuando sus dos extremos están
+    // puestos. Cuando el árbol se completa, brotan partículas nuevas en las puntas.
     juntas: {
       blend: "source-over",
-      link: { dist: 95, grow: 0.03, decay: 0.02, alpha: 0.4, rule: (p, q) => p.pair !== q.pair || p.pair < 0 },
+      link: null,
       enter(sys) {
+        const nodes = [];
+        const push = (x, y, parent, depth) => {
+          nodes.push({ x, y, parent, depth, p: null });
+          return nodes.length - 1;
+        };
+        const branch = (idx, ang, len, depth) => {
+          if (depth === 0) return;
+          const from = nodes[idx];
+          const id = push(from.x + Math.cos(ang) * len, from.y + Math.sin(ang) * len, idx, from.depth + 1);
+          const spread = 0.32 + 0.2 * hash(id * 1.7);
+          branch(id, ang - spread, len * 0.76, depth - 1);
+          branch(id, ang + spread, len * 0.76, depth - 1);
+        };
+        const rootId = push(470, 1050, -1, 0);
+        branch(rootId, -Math.PI / 2, 250, 5);
+        // se levanta de abajo hacia arriba
+        sys.tree = nodes.map((n, i) => ({ ...n, i })).sort((a, b) => a.depth - b.depth || a.i - b.i);
         const E = sys.byGen.exp;
         const Y = sys.byGen.young;
-        sys.pairs = E.map((e, i) => {
-          const y = Y[i];
-          e.pair = i;
-          y.pair = i;
-          return { e, y, x: 90 + hash(i * 3.1 + 5) * 870, y0: 130 + hash(i * 7.7 + 2) * 880, ph: hash(i + 99) * TAU };
+        sys.tree.forEach((n, k) => {
+          n.p = k % 2 ? Y[Math.floor(k / 2)] : E[Math.floor(k / 2)];
+          n.order = k;
         });
-        for (let k = E.length; k < Y.length; k++) Y[k].pair = -1;
-        sys.childTimer = 0;
-        for (const c of sys.byGen.child) { c.pair = -1; c.born = false; }
+        sys.byId = new Map(nodes.map((n, i) => [i, n]));
+        for (const p of sys.ps) p.node = null;
+        for (const n of sys.tree) n.p.node = n;
+        for (const c of sys.byGen.child) c.born = false;
+        sys.bloom = 0;
       },
       update(sys, dt, t, st) {
-        sys.childTimer += dt;
-        if (st > 1.5 && sys.childTimer > 0.3) {
-          sys.childTimer = 0;
-          const c = sys.byGen.child.find((ch) => !ch.born);
-          if (c) {
-            const pr = sys.pairs[(Math.random() * sys.pairs.length) | 0];
-            c.born = true;
-            c.x = pr.e.x; c.y = pr.e.y; c.a = 0;
-            c.hx = clamp(pr.x + (Math.random() - 0.5) * 140, 40, 1000);
-            c.hy = clamp(pr.y0 + (Math.random() - 0.5) * 140, 60, 1040);
-            c.glow = 1;
+        const grown = Math.min(sys.tree.length, Math.floor(st / 0.2));
+        const done = grown >= sys.tree.length;
+        for (const n of sys.tree) n.ready = n.order < grown;
+        if (done) {
+          sys.bloom += dt;
+          if (sys.bloom > 0.35) {
+            sys.bloom = 0;
+            const c = sys.byGen.child.find((ch) => !ch.born);
+            const tip = sys.tree[sys.tree.length - 1 - Math.floor(Math.random() * 16)];
+            if (c && tip) {
+              c.born = true;
+              c.x = tip.x; c.y = tip.y; c.a = 0;
+              c.hx = tip.x + (Math.random() - 0.5) * 90;
+              c.hy = tip.y + (Math.random() - 0.5) * 90;
+            }
           }
         }
-        for (const pr of sys.pairs) {
-          const cx = pr.x + Math.sin(t * 0.3 + pr.ph) * 26;
-          const cy = pr.y0 + Math.cos(t * 0.26 + pr.ph) * 26;
-          const a = pr.ph + t * 1.1;
-          const ox = Math.cos(a) * 12;
-          const oy = Math.sin(a) * 12;
-          const { e, y } = pr;
-          e.reset(); y.reset();
-          e.tx = cx + ox; e.ty = cy + oy; e.k = 0.03; e.fr = 0.8;
-          y.tx = cx - ox; y.ty = cy - oy; y.k = 0.03; y.fr = 0.8;
-          e.tc = PAL.blue; e.ta = 0.95;
-          y.tc = PAL.white; y.ta = 0.95; y.ts = 1.2;
-        }
         for (const p of sys.ps) {
-          if (p.gen === "young" && p.pair < 0) {
-            p.reset();
-            p.tx = 60 + p.h1 * 940 + Math.sin(t * 0.3 + p.h3 * 9) * 30;
-            p.ty = 90 + p.h2 * 950;
-            p.tc = PAL.white; p.ta = 0.45;
-          } else if (p.gen === "child") {
+          if (p.gen === "child") {
             if (!p.born) { p.off(); continue; }
             p.reset();
-            p.tx = p.hx + Math.sin(t * 0.5 + p.h3 * 9) * 14;
-            p.ty = p.hy + Math.cos(t * 0.45 + p.h1 * 9) * 14;
-            p.tc = PAL.violet; p.ta = 0.95; p.ts = 1.3; p.k = 0.01;
+            p.tx = p.hx + Math.sin(t * 0.7 + p.h3 * 9) * 8;
+            p.ty = p.hy + Math.cos(t * 0.6 + p.h1 * 9) * 8;
+            p.tc = PAL.pink;
+            p.ta = 0.95;
+            p.ts = 1.1;
+            p.k = 0.02;
+            continue;
+          }
+          p.reset();
+          const n = p.node;
+          if (n && n.ready) {
+            const sway = Math.sin(t * 0.8 + n.depth * 0.7) * n.depth * 2.2;
+            p.tx = n.x + sway;
+            p.ty = n.y + Math.cos(t * 0.7 + n.depth) * n.depth * 0.6;
+            p.k = 0.05;
+            p.fr = 0.78;
+            p.tc = p.gen === "exp" ? PAL.blue : PAL.violet;
+            p.ta = 1;
+            p.ts = 1.2;
+          } else {
+            // esperando turno al pie del árbol
+            p.tx = 120 + p.h1 * 760 + Math.sin(t * 0.4 + p.h3 * 9) * 20;
+            p.ty = 1000 + p.h2 * 60;
+            p.k = 0.008;
+            p.tc = p.gen === "exp" ? PAL.blue : PAL.violet;
+            p.ta = 0.4;
           }
         }
       },
       draw(sys, ctx) {
-        ctx.lineWidth = 2.4;
-        for (const pr of sys.pairs) {
-          ctx.strokeStyle = rgba(PAL.blue, 0.85 * Math.min(pr.e.a, pr.y.a));
+        ctx.lineCap = "round";
+        for (const n of sys.tree) {
+          if (!n.ready || n.parent < 0) continue;
+          const parent = sys.tree.find((m) => m.i === n.parent);
+          if (!parent || !parent.ready) continue;
+          ctx.strokeStyle = rgba(PAL.blue, 0.55);
+          ctx.lineWidth = Math.max(1.5, 9 - n.depth * 1.5);
           ctx.beginPath();
-          ctx.moveTo(pr.e.x, pr.e.y);
-          ctx.lineTo(pr.y.x, pr.y.y);
+          ctx.moveTo(parent.p.x, parent.p.y);
+          ctx.lineTo(n.p.x, n.p.y);
           ctx.stroke();
         }
       },
-      linkColor: () => PAL.blue,
     },
 
     // 11 · LOS JÓVENES NO SON EL FUTURO. SON EL PRESENTE QUE MUCHAS ORGANIZACIONES AÚN NO VEN.
-    // Los jóvenes aparecen en un punto lejano, casi invisibles (el "futuro").
-    // Viajan hacia el frente, crecen, se encienden y se conectan entre ellos: están aquí,
-    // ahora. La experiencia se retira al fondo para que se vean.
+    // Literal: un radar. Los jóvenes ya están todos en la pantalla desde el primer segundo,
+    // pero casi invisibles. El barrido los va encontrando y cada uno que es visto se queda
+    // encendido: no llegaron, siempre estuvieron ahí.
     presente: {
-      link: { dist: 135, grow: 0.03, decay: 0.03, alpha: 0.6, rule: (p, q) => p.here && q.here },
-      update(sys, dt, t, st) {
-        const VP = { x: 560, y: 430 };
+      link: { dist: 145, grow: 0.04, decay: 0.03, alpha: 0.55, rule: (p, q) => p.seen && q.seen },
+      enter(sys) {
+        sys.byGen.young.forEach((p, k) => {
+          p.ang = hash(k * 1.3) * TAU;
+          p.rad = 70 + Math.sqrt(hash(k * 2.7)) * 470;
+          p.seen = false;
+        });
+      },
+      update(sys, dt, t) {
+        const C = { x: 520, y: 560 };
+        const sweep = (t * 0.9) % TAU;
         for (const p of sys.ps) {
           if (p.gen === "child") { p.off(); continue; }
           p.reset();
           if (p.gen === "young") {
-            const delay = p.h1 * 5.5;
-            const z = 1 - smooth((st - delay) / 2.4);
-            const ang = p.h2 * TAU;
-            const rad = Math.sqrt(p.h3);
-            const fx = 520 + Math.cos(ang) * 450 * rad + Math.sin(t * 0.3 + p.h3 * 9) * 12 * (1 - z);
-            const fy = 560 + Math.sin(ang) * 440 * rad + Math.cos(t * 0.28 + p.h2 * 9) * 12 * (1 - z);
-            const zz = z * z;
-            p.tx = lerp(fx, VP.x, zz);
-            p.ty = lerp(fy, VP.y, zz);
-            p.k = 0.06;
-            p.fr = 0.75;
-            p.ts = 0.35 + 1.35 * (1 - z);
-            p.ta = 0.05 + 0.95 * (1 - z);
+            const ang = p.ang + Math.sin(t * 0.2 + p.h1 * 9) * 0.02;
+            p.tx = C.x + Math.cos(ang) * p.rad;
+            p.ty = C.y + Math.sin(ang) * p.rad * 0.92;
+            p.k = 0.02;
+            const diff = (((sweep - p.ang) % TAU) + TAU) % TAU;
+            if (diff < 0.07 && !p.seen) {
+              p.seen = true;
+              p.glow = 1;
+            }
             p.tc = (p.h1 * 7) % 1 < 0.25 ? PAL.pink : PAL.cyan;
-            p.here = z < 0.05;
-            if (p.here) p.glow = Math.max(p.glow, 0.35);
+            p.ta = p.seen ? 0.95 : 0.07;
+            p.ts = p.seen ? 1.2 : 0.8;
           } else {
-            p.here = false;
-            p.tx = 1020 + p.h1 * 880;
-            p.ty = 20 + p.h2 * 1040;
+            // las organizaciones miran desde afuera del radar
+            const ang = p.h1 * TAU + t * 0.03;
+            const rad = 640 + p.h2 * 160;
+            p.tx = C.x + Math.cos(ang) * rad;
+            p.ty = C.y + Math.sin(ang) * rad * 0.9;
             p.tc = PAL.grey;
-            p.ta = 0.16;
+            p.ta = 0.14;
             p.ts = 0.8;
-            p.k = 0.003;
+            p.k = 0.004;
           }
+        }
+      },
+      draw(sys, ctx, t) {
+        const C = { x: 520, y: 560 };
+        ctx.lineWidth = 1.5;
+        for (const r of [140, 280, 420, 540]) {
+          ctx.strokeStyle = rgba(PAL.cyan, 0.12);
+          ctx.beginPath();
+          ctx.ellipse(C.x, C.y, r, r * 0.92, 0, 0, TAU);
+          ctx.stroke();
+        }
+        ctx.strokeStyle = rgba(PAL.cyan, 0.09);
+        ctx.beginPath();
+        ctx.moveTo(C.x - 560, C.y);
+        ctx.lineTo(C.x + 560, C.y);
+        ctx.moveTo(C.x, C.y - 520);
+        ctx.lineTo(C.x, C.y + 520);
+        ctx.stroke();
+        const sweep = (t * 0.9) % TAU;
+        ctx.lineWidth = 2;
+        for (let k = 0; k < 20; k++) {
+          const a = sweep - k * 0.032;
+          ctx.strokeStyle = rgba(PAL.cyan, 0.18 * (1 - k / 20));
+          ctx.beginPath();
+          ctx.moveTo(C.x, C.y);
+          ctx.lineTo(C.x + Math.cos(a) * 560, C.y + Math.sin(a) * 560 * 0.92);
+          ctx.stroke();
         }
       },
       linkColor: () => PAL.cyan,

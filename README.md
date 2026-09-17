@@ -3,7 +3,18 @@
 Presentación web para la charla de Fórum UPB en Future Leaders Forum 2026, construida con
 HTML, CSS y JavaScript a partir del diseño de Figma y un sistema de partículas.
 
-## Abrir
+## Ver la presentación
+
+**Escritorio (pantalla grande):**
+https://mafora12.github.io/U5-particulas/
+
+**Celular:**
+https://mafora12.github.io/U5-particulas/movil.html
+
+Desde un celular, el enlace de escritorio redirige solo a la versión móvil; para forzar la
+versión de escritorio agrega `?escritorio` a la URL.
+
+## Abrir en local
 
 Doble clic en `index.html`, o con un servidor local:
 

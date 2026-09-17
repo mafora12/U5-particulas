@@ -9,7 +9,6 @@ const $ = (sel) => document.querySelector(sel);
 const app = $("#app");
 const bgLayer = $("#bg");
 const card = $("#card");
-const glass = $("#glass");
 const prevBtn = $("#prev");
 const nextBtn = $("#next");
 const counter = $("#counter");
@@ -127,31 +126,22 @@ function fitCard() {
   }
 }
 
-// El vidrio copia la posición de la tarjeta (sin su pequeño desplazamiento de entrada).
 function cardRect() {
   const r = card.getBoundingClientRect();
   const matrix = new DOMMatrixReadOnly(getComputedStyle(card).transform);
   return { x: r.left - matrix.m41, y: r.top - matrix.m42, w: r.width, h: r.height };
 }
 
-function placeGlass(slide) {
+// El vidrio es el fondo de la propia tarjeta, así nunca se desalinea con el texto.
+function applyGlass(slide) {
   const panel = slide.panels[0];
+  card.dataset.glass = panel ? "on" : "off";
   if (!panel) {
-    // diapositivas sin panel en Figma (3 y 6): el texto va sin vidrio
-    glass.classList.remove("is-visible");
+    card.style.removeProperty("--radii");
     return;
   }
-  const rect = cardRect();
-  Object.assign(glass.style, {
-    left: `${rect.x}px`,
-    top: `${rect.y}px`,
-    width: `${rect.w}px`,
-    height: `${rect.h}px`,
-    borderRadius: radiiFor(panel).map((v) => `${v}px`).join(" "),
-    background: panel.fill || "",
-  });
-  glass.style.setProperty("--blur", `${Math.round(panel.blur * 0.45)}px`);
-  glass.classList.add("is-visible");
+  card.style.setProperty("--radii", radiiFor(panel).map((v) => `${v}px`).join(" "));
+  card.style.setProperty("--blur", `${Math.round(panel.blur * 0.45)}px`);
 }
 
 // Las partículas nacen dentro de la tarjeta de vidrio (en coordenadas de la escena).
@@ -167,8 +157,8 @@ function render(slide, { animate = true } = {}) {
     card.replaceChildren(...textsFor(slide).map(buildText));
     card.dataset.anchor = anchorFor(slide);
     card.dataset.align = slide.texts.some((t) => t.align === "right") ? "right" : "center";
+    applyGlass(slide);
     fitCard();
-    placeGlass(slide);
     requestAnimationFrame(() => card.classList.add("is-visible"));
   };
   if (animate && card.classList.contains("is-visible")) {
@@ -184,7 +174,6 @@ function go(i, { animate = true } = {}) {
   if (next === index) return;
   index = next;
   const slide = SLIDES[index];
-  app.classList.toggle("particles-front", Boolean(slide.particlesFront));
   setBackground(slide);
   render(slide, { animate });
 
@@ -245,10 +234,7 @@ async function toggleFullscreen() {
 
 function fit() {
   particles.resizeView(window.innerWidth, window.innerHeight);
-  if (index >= 0) {
-    fitCard();
-    placeGlass(SLIDES[index]);
-  }
+  if (index >= 0) fitCard();
 }
 
 // ---------- Eventos ----------
@@ -285,6 +271,7 @@ window.addEventListener("keydown", (e) => {
 
 window.addEventListener("resize", fit);
 window.addEventListener("orientationchange", () => window.setTimeout(fit, 250));
+window.visualViewport?.addEventListener("resize", fit);
 document.addEventListener("fullscreenchange", fit);
 document.fonts.ready.then(() => {
   if (index >= 0) render(SLIDES[index], { animate: false });
