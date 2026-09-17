@@ -53,6 +53,12 @@ Los valores más útiles para ajustar están en `link` de cada escena:
 
 La cantidad de partículas está en `COUNT` al inicio de `particles.js`.
 
+## Celular
+
+La versión para celular es `movil.html` y se adapta sola a vertical y horizontal. Los tamaños
+de letra se calculan en `fitCard()` dentro de `movil.js`; la composición horizontal está al
+final de `movil.css`, en el bloque `@media (orientation: landscape)`.
+
 ## Sin conexión
 
 La tipografía Rajdhani se carga desde Google Fonts. Sin internet la presentación funciona

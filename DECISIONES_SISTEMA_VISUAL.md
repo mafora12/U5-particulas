@@ -114,6 +114,9 @@ vincularse con quién), **qué la hace crecer o romperse** (distancia, tiempo, o
   de celular. En las diapositivas sin panel (3 y 6) el texto va suelto, con sombra para contraste.
 - Las partículas usan las mismas escenas y relaciones; la escena completa se proyecta sobre la
   pantalla vertical (se estira), así ninguna estructura queda recortada. Siguen naciendo del vidrio.
+- En horizontal la frase pasa a una columna en la mitad izquierda, las partículas quedan
+  visibles a la derecha y los controles se compactan; el cambio ocurre al girar el teléfono,
+  sin recargar. Se respetan las muescas laterales y el alto real de la ventana.
 - En la última diapositiva no se muestran códigos QR (no se escanean con el mismo teléfono):
   se muestran enlaces.
 

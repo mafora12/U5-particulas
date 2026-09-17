@@ -110,17 +110,22 @@ function setBackground(slide) {
 }
 
 // Tamaño de letra: proporcional al ancho de la pantalla y reducido si la tarjeta no cabe.
+function viewport() {
+  const vv = window.visualViewport;
+  return { w: Math.round(vv?.width || window.innerWidth), h: Math.round(vv?.height || window.innerHeight) };
+}
+
 function fitCard() {
-  const w = window.innerWidth;
-  const h = window.innerHeight;
+  const { w, h } = viewport();
   const landscape = w > h;
-  let k = landscape ? Math.min(0.5, Math.max(0.26, h / 1100)) : Math.min(0.55, Math.max(0.3, w / 980));
+  // en horizontal la tarjeta ocupa media pantalla: la letra se guía por el alto disponible
+  let k = landscape ? Math.min(0.46, Math.max(0.24, h / 1000)) : Math.min(0.55, Math.max(0.3, w / 980));
   const styles = getComputedStyle(document.documentElement);
   const top = parseFloat(styles.getPropertyValue("--top")) || 64;
   const bottom = parseFloat(styles.getPropertyValue("--bottom")) || 84;
-  const available = h - top - bottom - 24;
+  const available = h - top - bottom - (landscape ? 12 : 24);
   card.style.setProperty("--k", k);
-  while (card.scrollHeight > available && k > 0.2) {
+  while (card.scrollHeight > available && k > 0.18) {
     k -= 0.01;
     card.style.setProperty("--k", k);
   }
@@ -147,8 +152,9 @@ function applyGlass(slide) {
 // Las partículas nacen dentro de la tarjeta de vidrio (en coordenadas de la escena).
 function birthAreas() {
   const rect = cardRect();
-  const sx = DESIGN_W / window.innerWidth;
-  const sy = DESIGN_H / window.innerHeight;
+  const { w, h } = viewport();
+  const sx = DESIGN_W / w;
+  const sy = DESIGN_H / h;
   return [{ x: rect.x * sx, y: rect.y * sy, w: rect.w * sx, h: rect.h * sy }];
 }
 
@@ -233,7 +239,8 @@ async function toggleFullscreen() {
 }
 
 function fit() {
-  particles.resizeView(window.innerWidth, window.innerHeight);
+  const { w, h } = viewport();
+  particles.resizeView(w, h);
   if (index >= 0) fitCard();
 }
 
