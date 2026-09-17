@@ -36,24 +36,9 @@ y abrir `http://localhost:8123`. Se puede ir directo a una diapositiva con `#nú
 - Engranaje → `Esp` / `Por`: cambiar idioma.
 - En pantallas táctiles: deslizar a izquierda o derecha.
 
-## Versión para celular
+## Diseño diapositivas   
+https://www.figma.com/design/wINLpyUOSzYRDlTden2Q8A/juan_franco_u5?node-id=0-1&t=ifqUYOIkmIFDKH7V-1  
 
-`movil.html` es la misma presentación adaptada a celulares (vertical y horizontal): mismos
-textos, fondos, vidrio y partículas, organizados en una columna. Si alguien abre `index.html`
-desde un celular, se redirige solo a la versión móvil (agrega `?escritorio` a la URL para evitarlo).
-
-Publicada con GitHub Pages en:
-
-https://mafora12.github.io/U5-particulas/movil.html
-
-El QR de ese enlace (`assets/qr-movil.png`) aparece en la última diapositiva.
-
-### Activar GitHub Pages (una sola vez)
-
-1. En GitHub abre el repositorio → **Settings** → **Pages**.
-2. En *Build and deployment* elige **Deploy from a branch**, rama `main` y carpeta `/ (root)`.
-3. Guarda. En uno o dos minutos quedan disponibles
-   `https://mafora12.github.io/U5-particulas/` (escritorio) y `.../movil.html` (celular).
 
 Para cambiar textos o enlaces revisa `GUIA_CAMBIOS_RAPIDOS.md`.
 El concepto y la gramática visual están en `DECISIONES_SISTEMA_VISUAL.md`.
